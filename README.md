@@ -1,7 +1,7 @@
 ﻿<!--
 LANG: en-US
 ALTERNATES:
-- lang: zh-CN, path: README.zh-cn.md, title: 中文说明
+- lang: zh-CN, path: README.zh.md, title: 中文说明
 -->
 # Utility Master
 
