@@ -1,0 +1,260 @@
+<Page
+    x:Class="UtilityMaster.Views.MapView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid Background="#0f1116">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Map area + floating bar -->
+        <Grid Grid.Column="0">
+            <Border ClipToBounds="True" x:Name="MapContainer" Background="#0a0b0e"
+                    SizeChanged="Container_SizeChanged" MouseWheel="Map_MouseWheel"
+                    MouseLeftButtonDown="Map_MouseLeftButtonDown" MouseMove="Map_MouseMove"
+                    MouseLeftButtonUp="Map_MouseLeftButtonUp" MouseRightButtonDown="Map_RightClick">
+                <Canvas x:Name="MapCanvas" RenderTransformOrigin="0,0">
+                    <Canvas.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform x:Name="MapScale" ScaleX="1" ScaleY="1"/>
+                            <TranslateTransform x:Name="MapTranslate" X="0" Y="0"/>
+                        </TransformGroup>
+                    </Canvas.RenderTransform>
+                    <Image x:Name="MapImage" Stretch="None"/>
+                </Canvas>
+            </Border>
+
+            <!-- ===== NADES FILTER BAR ===== -->
+            <Border x:Name="NadesFilterBar" HorizontalAlignment="Center" VerticalAlignment="Top"
+                    Margin="0,12,0,0" CornerRadius="22" Padding="16,10"
+                    Background="#cc1a1d24" BorderBrush="#33ffffff" BorderThickness="1">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <!-- Map switcher ComboBox - transparent style -->
+                    <ComboBox x:Name="MapSwitcherNades" Height="28"
+                        FontSize="13" FontWeight="Bold"
+                        Foreground="White" Background="Transparent" BorderThickness="0"
+                        VerticalAlignment="Center" Margin="8,0,8,0"
+                        HorizontalAlignment="Left"
+                        SelectionChanged="MapSwitcher_SelectionChanged">
+                        <ComboBox.ItemContainerStyle>
+                            <Style TargetType="ComboBoxItem">
+                                <Setter Property="Background" Value="#1a1d24"/>
+                                <Setter Property="Foreground" Value="#ccc"/>
+                                <Setter Property="FontSize" Value="13"/>
+                            </Style>
+                        </ComboBox.ItemContainerStyle>
+                        <ComboBox.Template>
+                            <ControlTemplate TargetType="ComboBox">
+                                <Grid><ToggleButton Focusable="False" ClickMode="Press"
+                                    IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                    Background="Transparent" BorderThickness="0" Cursor="Hand">
+                                    <ToggleButton.Template>
+                                        <ControlTemplate TargetType="ToggleButton">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock x:Name="ToggleText"
+                                                    Text="{Binding SelectedItem.Content, RelativeSource={RelativeSource AncestorType=ComboBox}}"
+                                                    FontSize="13" FontWeight="Bold" Foreground="White" VerticalAlignment="Center"/>
+                                                <TextBlock Text=" ▼" FontSize="9" Foreground="#888" VerticalAlignment="Center" Margin="4,0,0,0"/>
+                                            </StackPanel>
+                                        </ControlTemplate>
+                                    </ToggleButton.Template>
+                                </ToggleButton>
+                                <Popup IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Bottom"
+                                    AllowsTransparency="True" Focusable="False" PopupAnimation="Slide">
+                                    <Border Background="#1a1d24" BorderBrush="#333" BorderThickness="1"
+                                        CornerRadius="8" Padding="4">
+                                        <ScrollViewer MaxHeight="300">
+                                            <ItemsPresenter/>
+                                        </ScrollViewer>
+                                    </Border>
+                                </Popup>
+                            </Grid></ControlTemplate>
+                        </ComboBox.Template>
+                    </ComboBox>
+
+                    <Rectangle Width="1" Height="20" Fill="#3a3d44" Margin="0,0,10,0" VerticalAlignment="Center"/>
+
+                    <Border x:Name="SmokePill" CornerRadius="10" Padding="14,10" Margin="0,0,3,0" Cursor="Hand"
+                        MouseLeftButtonDown="Filter_Click" Tag="smoke" Background="#1a1d24">
+                        <Image Source="/Assets/Maps/smoke.png" Width="36" Height="36" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality"/>
+                    </Border>
+                    <Border x:Name="FlashPill" CornerRadius="10" Padding="14,10" Margin="0,0,3,0" Cursor="Hand"
+                        MouseLeftButtonDown="Filter_Click" Tag="flash" Background="#1a1d24">
+                        <Image Source="/Assets/Maps/flash.png" Width="32" Height="32" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality"/>
+                    </Border>
+                    <Border x:Name="MollyPill" CornerRadius="10" Padding="12,8" Margin="0,0,3,0" Cursor="Hand"
+                        MouseLeftButtonDown="Filter_Click" Tag="molotov" Background="#1a1d24">
+                        <Image Source="/Assets/Maps/molotov.png" Width="32" Height="32" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality"/>
+                    </Border>
+                    <Border x:Name="HEPill" CornerRadius="10" Padding="12,8" Margin="0,0,3,0" Cursor="Hand"
+                        MouseLeftButtonDown="Filter_Click" Tag="he" Background="#1a1d24">
+                        <Image Source="/Assets/Maps/he.png" Width="36" Height="36" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality"/>
+                    </Border>
+
+                    <Border x:Name="ProPill" CornerRadius="10" Padding="12,8" Margin="0,0,12,0" Cursor="Hand"
+        MouseLeftButtonDown="ProFilter_Click" Background="#1a1d24">
+        <TextBlock x:Name="ProPillText" Text="PRO" Foreground="#888" FontSize="12" FontWeight="Bold" VerticalAlignment="Center"/>
+    </Border>
+
+                    <Border x:Name="TPill" CornerRadius="10" Padding="12,7" Margin="0,0,3,0" Cursor="Hand"
+                        MouseLeftButtonDown="Side_Click" Tag="T" Background="#1a1d24">
+                        <TextBlock x:Name="FilterT" Text="T" Foreground="#888" FontSize="13" FontWeight="Bold" VerticalAlignment="Center"/>
+                    </Border>
+                    <Border x:Name="CTPill" CornerRadius="10" Padding="12,7" Margin="0,0,3,0" Cursor="Hand"
+                        MouseLeftButtonDown="Side_Click" Tag="CT" Background="#1a1d24">
+                        <TextBlock x:Name="FilterCT" Text="CT" Foreground="#888" FontSize="13" FontWeight="Bold" VerticalAlignment="Center"/>
+                    </Border>
+                    <Border x:Name="BothPill" CornerRadius="10" Padding="10,5" Margin="0,0,12,0" Cursor="Hand"
+                        MouseLeftButtonDown="Side_Click" Tag="Both" Background="#f5a623">
+                        <TextBlock x:Name="FilterBoth" Text="T+CT" Foreground="#0f1116" FontSize="13" FontWeight="Bold" VerticalAlignment="Center"/>
+                    </Border>
+
+                    <StackPanel x:Name="FloorPanel" Orientation="Horizontal" Visibility="Collapsed">
+                        <Rectangle Width="1" Height="22" Fill="#3a3d44" Margin="0,0,12,0"/>
+                        <Border x:Name="UpperPill" CornerRadius="10" Padding="10,5" Margin="0,0,3,0" Cursor="Hand"
+                            MouseLeftButtonDown="Floor_Click" Tag="default" Background="#f5a623">
+                            <TextBlock x:Name="FloorDefault" Text="Upper" Foreground="#0f1116" FontSize="13" FontWeight="Bold" VerticalAlignment="Center"/>
+                        </Border>
+                        <Border x:Name="LowerPill" CornerRadius="10" Padding="10,5" Cursor="Hand"
+                            MouseLeftButtonDown="Floor_Click" Tag="lower" Background="#1a1d24">
+                            <TextBlock x:Name="FloorLower" Text="Lower" Foreground="#888" FontSize="13" FontWeight="Bold" VerticalAlignment="Center"/>
+                        </Border>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- ===== TRICKS FILTER BAR ===== -->
+            <Border x:Name="TricksFilterBar" HorizontalAlignment="Center" VerticalAlignment="Top"
+                    Margin="0,12,0,0" CornerRadius="22" Padding="16,10"
+                    Background="#cc1a1d24" BorderBrush="#33ffffff" BorderThickness="1" Visibility="Collapsed">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <!-- Map switcher for Tricks bar -->
+                    <ComboBox x:Name="MapSwitcherTricks" Height="28"
+                        FontSize="13" FontWeight="Bold"
+                        Foreground="White" Background="Transparent" BorderThickness="0"
+                        VerticalAlignment="Center" Margin="8,0,8,0"
+                        HorizontalAlignment="Left"
+                        SelectionChanged="MapSwitcher_SelectionChanged">
+                        <ComboBox.ItemContainerStyle>
+                            <Style TargetType="ComboBoxItem">
+                                <Setter Property="Background" Value="#1a1d24"/>
+                                <Setter Property="Foreground" Value="#ccc"/>
+                                <Setter Property="FontSize" Value="13"/>
+                            </Style>
+                        </ComboBox.ItemContainerStyle>
+                        <ComboBox.Template>
+                            <ControlTemplate TargetType="ComboBox">
+                                <Grid><ToggleButton Focusable="False" ClickMode="Press"
+                                    IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                    Background="Transparent" BorderThickness="0" Cursor="Hand">
+                                    <ToggleButton.Template>
+                                        <ControlTemplate TargetType="ToggleButton">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock
+                                                    Text="{Binding SelectedItem.Content, RelativeSource={RelativeSource AncestorType=ComboBox}}"
+                                                    FontSize="14" FontWeight="Bold" Foreground="White" VerticalAlignment="Center"/>
+                                                <TextBlock Text=" V" FontSize="10" Foreground="#666" VerticalAlignment="Center" Margin="3,0,0,0"/>
+                                            </StackPanel>
+                                        </ControlTemplate>
+                                    </ToggleButton.Template>
+                                </ToggleButton>
+                                <Popup IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Bottom"
+                                    AllowsTransparency="True" Focusable="False" PopupAnimation="Slide">
+                                    <Border Background="#1a1d24" BorderBrush="#333" BorderThickness="1"
+                                        CornerRadius="8" Padding="4">
+                                        <ScrollViewer MaxHeight="300">
+                                            <ItemsPresenter/>
+                                        </ScrollViewer>
+                                    </Border>
+                                </Popup>
+                            </Grid></ControlTemplate>
+                        </ComboBox.Template>
+                    </ComboBox>
+
+                    <Rectangle Width="1" Height="20" Fill="#3a3d44" Margin="0,0,10,0" VerticalAlignment="Center"/>
+
+                    <Border x:Name="WallbangPill" CornerRadius="10" Padding="14,10" Margin="0,0,3,0" Cursor="Hand"
+                        MouseLeftButtonDown="TrickType_Click" Tag="wallbang" Background="#1a1d24">
+                        <TextBlock x:Name="TrickWallbangLabel" Text="Wallbang" Foreground="#888" FontSize="12" FontWeight="Bold" VerticalAlignment="Center"/>
+                    </Border>
+                    <Border x:Name="BoostPill" CornerRadius="10" Padding="14,10" Margin="0,0,3,0" Cursor="Hand"
+                        MouseLeftButtonDown="TrickType_Click" Tag="boost" Background="#1a1d24">
+                        <TextBlock x:Name="TrickBoostLabel" Text="Boost" Foreground="#888" FontSize="12" FontWeight="Bold" VerticalAlignment="Center"/>
+                    </Border>
+                    <Border x:Name="JumpPill" CornerRadius="10" Padding="14,10" Margin="0,0,3,0" Cursor="Hand"
+                        MouseLeftButtonDown="TrickType_Click" Tag="jump" Background="#1a1d24">
+                        <TextBlock x:Name="TrickJumpLabel" Text="Jump" Foreground="#888" FontSize="12" FontWeight="Bold" VerticalAlignment="Center"/>
+                    </Border>
+                    <Border x:Name="CampPill" CornerRadius="10" Padding="14,10" Margin="0,0,3,0" Cursor="Hand"
+                        MouseLeftButtonDown="TrickType_Click" Tag="camp" Background="#1a1d24">
+                        <TextBlock x:Name="TrickCampLabel" Text="Camp" Foreground="#888" FontSize="12" FontWeight="Bold" VerticalAlignment="Center"/>
+                    </Border>
+                    <Border x:Name="TrickProPill" CornerRadius="10" Padding="14,10" Margin="0,0,12,0" Cursor="Hand"
+                        MouseLeftButtonDown="TrickProFilter_Click" Background="#1a1d24">
+                        <TextBlock x:Name="TrickProPillText" Text="PRO" Foreground="#888" FontSize="12" FontWeight="Bold" VerticalAlignment="Center"/>
+                    </Border>
+
+
+                    <Rectangle Width="1" Height="22" Fill="#3a3d44" Margin="0,0,12,0"/>
+
+                    <Border x:Name="TrickTPill" CornerRadius="10" Padding="12,7" Margin="0,0,3,0" Cursor="Hand"
+                        MouseLeftButtonDown="TrickSide_Click" Tag="T" Background="#1a1d24">
+                        <TextBlock x:Name="TrickFilterT" Text="T" Foreground="#888" FontSize="13" FontWeight="Bold" VerticalAlignment="Center"/>
+                    </Border>
+                    <Border x:Name="TrickCTPill" CornerRadius="10" Padding="12,7" Margin="0,0,3,0" Cursor="Hand"
+                        MouseLeftButtonDown="TrickSide_Click" Tag="CT" Background="#1a1d24">
+                        <TextBlock x:Name="TrickFilterCT" Text="CT" Foreground="#888" FontSize="13" FontWeight="Bold" VerticalAlignment="Center"/>
+                    </Border>
+                    <Border x:Name="TrickBothPill" CornerRadius="10" Padding="12,7" Cursor="Hand"
+                        MouseLeftButtonDown="TrickSide_Click" Tag="Both" Background="#f5a623">
+                        <TextBlock x:Name="TrickFilterBoth" Text="T+CT" Foreground="#0f1116" FontSize="13" FontWeight="Bold" VerticalAlignment="Center"/>
+                    </Border>
+
+                    <StackPanel x:Name="TricksFloorPanel" Orientation="Horizontal" Visibility="Collapsed">
+                        <Rectangle Width="1" Height="22" Fill="#3a3d44" Margin="0,0,12,0"/>
+                        <Border x:Name="TricksUpperPill" CornerRadius="10" Padding="10,5" Margin="0,0,3,0" Cursor="Hand"
+                            MouseLeftButtonDown="Floor_Click" Tag="default" Background="#1a1d24">
+                            <TextBlock x:Name="TricksFloorDefault" Text="Upper" Foreground="#888" FontSize="11" FontWeight="Bold" VerticalAlignment="Center"/>
+                        </Border>
+                        <Border x:Name="TricksLowerPill" CornerRadius="10" Padding="10,5" Cursor="Hand"
+                            MouseLeftButtonDown="Floor_Click" Tag="lower" Background="#1a1d24">
+                            <TextBlock x:Name="TricksFloorLower" Text="Lower" Foreground="#888" FontSize="11" FontWeight="Bold" VerticalAlignment="Center"/>
+                        </Border>
+                    </StackPanel></StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- Collapsible right panel toggle button -->
+        <Border Grid.Column="1" Background="Transparent" VerticalAlignment="Top" HorizontalAlignment="Right"
+                x:Name="SideToggleBtn" Cursor="Hand" Margin="0,12,0,0"
+                MouseLeftButtonDown="ToggleSidePanel_Click">
+            <Border Background="#cc1a1d24" CornerRadius="8,0,0,8" Padding="6,12"
+                    BorderBrush="#33ffffff" BorderThickness="1,1,0,1">
+                <TextBlock Text="◀" Foreground="#888" FontSize="12"/>
+            </Border>
+        </Border>
+
+        <!-- Collapsible right panel -->
+        <Border Grid.Column="1" Background="#1a1d24" BorderBrush="#2a2d34" BorderThickness="1,0,0,0"
+                Width="260" x:Name="SidePanel" Visibility="Collapsed">
+            <Grid Margin="12">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="36"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Button Grid.Row="0" Content="▶" Width="24" Height="24" Background="Transparent" Foreground="#888"
+                    BorderThickness="0" FontSize="12" HorizontalAlignment="Right" Click="ToggleSidePanel_Click"
+                    ToolTip="Collapse panel"/>
+                <TextBox x:Name="SearchBox" Grid.Row="1"
+                    Background="#0f1116" Foreground="White" BorderThickness="0"
+                    FontSize="13" Margin="0,0,0,8"
+                    TextChanged="SearchBox_TextChanged"/>
+                <ListBox x:Name="TargetList" Grid.Row="2"
+                    Background="Transparent" BorderThickness="0"
+                    Foreground="#ccc" FontSize="12"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Page>

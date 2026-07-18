@@ -1,0 +1,45 @@
+using System.Text.Json;
+using System.IO;
+
+namespace UtilityMaster.Services;
+
+public class SettingsData
+{
+    public string DefaultType { get; set; } = "smoke";
+    public string DefaultSide { get; set; } = "Both";
+    public string DefaultTrickType { get; set; } = "wallbang";
+    public bool AutoPlayVideo { get; set; }
+    public string Language { get; set; } = "en";
+    public bool UseChineseTerms { get; set; }
+    public double TargetConflictRadius { get; set; } = 20;
+    public double LineupConflictRadius { get; set; } = 10;
+    public double WallbangConflictRadius { get; set; } = 20;
+    public double WallbangLineupConflictRadius { get; set; } = 10;
+    public double TrickTargetConflictRadius { get; set; } = 15;
+    public bool AllowDeleteDefaults { get; set; }
+    public string DataPath { get; set; } = "";
+}
+
+public static class SettingsService
+{
+    private static string FilePath => Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+        "UtilityMaster", "settings.json");
+
+    public static SettingsData Load()
+    {
+        try
+        {
+            if (File.Exists(FilePath))
+                return JsonSerializer.Deserialize<SettingsData>(File.ReadAllText(FilePath)) ?? new();
+        }
+        catch { }
+        return new SettingsData();
+    }
+
+    public static void Save(SettingsData data)
+    {
+        Directory.CreateDirectory(Path.GetDirectoryName(FilePath)!);
+        File.WriteAllText(FilePath, JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true }));
+    }
+}

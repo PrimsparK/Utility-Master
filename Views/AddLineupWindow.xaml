@@ -1,0 +1,167 @@
+<Window
+    x:Class="UtilityMaster.Views.AddLineupWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Add Lineup" Width="520" Height="780"
+    MinWidth="440" MinHeight="680"
+    WindowStartupLocation="CenterOwner" ResizeMode="CanResize"
+    WindowStyle="None" AllowsTransparency="True"
+    Background="Transparent">
+    <Border Background="#1a1d24" CornerRadius="12" BorderBrush="#2a2d34" BorderThickness="1">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="20" ShadowDepth="0" Color="#000000" Opacity="0.5"/>
+        </Border.Effect>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="24">
+                <Grid Margin="0,0,0,8">
+                    <TextBlock x:Name="WinTitle" Text="Add Lineup" FontSize="18" FontWeight="Bold"
+                               Foreground="White" VerticalAlignment="Center"/>
+                    <Button Content="&#x2715;" Width="28" Height="28" FontSize="14"
+                            Background="Transparent" Foreground="#666" BorderThickness="0" Cursor="Hand"
+                            HorizontalAlignment="Right" Click="CloseBtn_Click"/>
+                </Grid>
+
+                <!-- Map Position Picker Button -->
+                <Button x:Name="PickPosBtn" Content="Click on Map to Select Position"
+                        Height="36" Margin="0,4,0,12" Cursor="Hand"
+                        Background="#2a2d34" Foreground="#ccc" BorderThickness="0"
+                        FontSize="12" Click="PickPosBtn_Click">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" CornerRadius="8"
+                                    BorderBrush="#3a3d44" BorderThickness="1">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="14,0"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <Grid Margin="0,0,0,8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="8"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <TextBlock x:Name="L_Name" Text="Lineup Name" Foreground="#999" FontSize="12" Margin="0,0,0,4"/>
+            <Border Background="#0f1116" CornerRadius="6" Height="34" Margin="0,0,0,10">
+                <TextBox x:Name="LineupName" Background="Transparent" Foreground="White" BorderThickness="0" VerticalAlignment="Center" FontSize="13" Padding="10,0"/>
+            </Border>
+            <Grid Margin="0,0,0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <TextBlock x:Name="L_Side" Text="Side" Foreground="#999" FontSize="12" Margin="0,0,0,4"/>
+                    <Border Background="#0f1116" CornerRadius="6" Height="34">
+                        <ComboBox x:Name="LineupSide" Background="Transparent" Foreground="White" BorderThickness="0" VerticalAlignment="Center" FontSize="13" Padding="6,0">
+                            <ComboBoxItem Content="T" Tag="T" IsSelected="True"/>
+                            <ComboBoxItem Content="CT" Tag="CT"/>
+                            <ComboBoxItem Content="T+CT" Tag="Both"/>
+                        </ComboBox>
+                    </Border>
+                </StackPanel>
+            </Grid>
+
+            <TextBlock x:Name="L_X" Text="Position X" Foreground="#999" FontSize="12" Margin="0,0,0,4"/>
+                        <Border Background="#0f1116" CornerRadius="6" Height="34">
+                            <TextBox x:Name="LineupX" Background="Transparent" Foreground="White" BorderThickness="0"
+                                     VerticalAlignment="Center" FontSize="13" Padding="10,0" TextChanged="Coord_TextChanged"/>
+                        </Border>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2">
+                        <TextBlock x:Name="L_Y" Text="Position Y" Foreground="#999" FontSize="12" Margin="0,0,0,4"/>
+                        <Border Background="#0f1116" CornerRadius="6" Height="34">
+                            <TextBox x:Name="LineupY" Background="Transparent" Foreground="White" BorderThickness="0"
+                                     VerticalAlignment="Center" FontSize="13" Padding="10,0" TextChanged="Coord_TextChanged"/>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+
+                <TextBlock x:Name="L_Aim" Text="Aim Description" Foreground="#999" FontSize="12" Margin="0,0,0,4"/>
+                <Border Background="#0f1116" CornerRadius="6" Margin="0,0,0,10">
+                    <TextBox x:Name="AimDesc" Background="Transparent" Foreground="White" BorderThickness="0"
+                             Height="50" TextWrapping="Wrap" AcceptsReturn="True" Padding="10,6"
+                             VerticalScrollBarVisibility="Auto"/>
+                </Border>
+
+                <TextBlock x:Name="L_Throw" Text="Throw Type" Foreground="#999" FontSize="12" Margin="0,0,0,4"/>
+                <Border Background="#0f1116" CornerRadius="6" Height="34" Margin="0,0,0,10">
+                    <ComboBox x:Name="ThrowType" Background="Transparent" Foreground="White" BorderThickness="0"
+                              VerticalAlignment="Center" FontSize="13" Padding="6,0">
+                        <ComboBoxItem x:Name="CbStanding" Content="Standing" Tag="standing" IsSelected="True"/>
+                        <ComboBoxItem x:Name="CbJumpThrow" Content="Jump-throw" Tag="jump-throw"/>
+                        <ComboBoxItem x:Name="CbRunJumpThrow" Content="Run Jump-throw" Tag="run-jump-throw"/>
+                        <ComboBoxItem x:Name="CbRunning" Content="Running" Tag="running"/>
+                        <ComboBoxItem x:Name="CbRunThrow" Content="Run-throw" Tag="run-throw"/>
+                        <ComboBoxItem x:Name="CbCrouching" Content="Crouching" Tag="crouching"/>
+                        <ComboBoxItem x:Name="CbCrouchJump" Content="Crouch Jump-throw" Tag="crouch-jump-throw"/>
+                    </ComboBox>
+                </Border>
+
+                <Grid Margin="0,0,0,4">
+                    <TextBlock x:Name="L_Images" Text="Images" Foreground="#999" FontSize="12" Margin="0,0,0,4" VerticalAlignment="Bottom"/>
+                    <Button x:Name="PasteBtn" Content="Paste Image (Ctrl+V)" Width="140" Height="28"
+                            Background="#2a2d34" Foreground="#ccc" BorderThickness="0" FontSize="11" HorizontalAlignment="Right"
+                            Cursor="Hand" Click="PasteImageBtn_Click">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}" CornerRadius="6">
+                                    <ContentPresenter Margin="10,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </Grid>
+                <ItemsControl x:Name="ImageList" Margin="0,4,0,8" MinHeight="40">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+
+                <TextBlock x:Name="L_Video" Text="Video URL" Foreground="#999" FontSize="12" Margin="0,0,0,4"/>
+                <Border Background="#0f1116" CornerRadius="6" Height="34" Margin="0,0,0,8">
+                    <TextBox x:Name="VideoUrl" Background="Transparent" Foreground="White" BorderThickness="0"
+                             VerticalAlignment="Center" FontSize="13" Padding="10,0" TextChanged="VideoUrl_TextChanged"/>
+                </Border>
+
+                <MediaElement x:Name="VideoPlayer" LoadedBehavior="Manual" UnloadedBehavior="Stop"
+                    Height="200" Margin="0,0,0,8" Visibility="Collapsed"
+                    MediaFailed="VideoPlayer_MediaFailed"/>
+                <StackPanel x:Name="VideoControls" Orientation="Horizontal" HorizontalAlignment="Center" Visibility="Collapsed" Margin="0,0,0,10">
+                    <Button Content="Play" Width="50" Height="26" Background="#f5a623" Foreground="#0f1116"
+                            BorderThickness="0" FontSize="11" Cursor="Hand" Click="VideoPlay_Click" Margin="0,0,6,0"/>
+                    <Button Content="Pause" Width="50" Height="26" Background="#2a2d34" Foreground="#ccc"
+                            BorderThickness="0" FontSize="11" Cursor="Hand" Click="VideoPause_Click" Margin="0,0,6,0"/>
+                    <Button Content="Stop" Width="50" Height="26" Background="#2a2d34" Foreground="#ccc"
+                            BorderThickness="0" FontSize="11" Cursor="Hand" Click="VideoStop_Click"/>
+                </StackPanel>
+
+                <TextBlock x:Name="L_Notes" Text="Notes" Foreground="#999" FontSize="12" Margin="0,0,0,4"/>
+                <Border Background="#0f1116" CornerRadius="6" Margin="0,0,0,16">
+                    <TextBox x:Name="Notes" Background="Transparent" Foreground="White" BorderThickness="0"
+                             Height="50" TextWrapping="Wrap" AcceptsReturn="True" Padding="10,6"
+                             VerticalScrollBarVisibility="Auto"/>
+                </Border>
+
+
+                <CheckBox x:Name="ProCheck" Foreground="#ccc" FontSize="13" Margin="0,0,0,12"
+                          Content="PRO (Pro Selected)" Checked="ProCheck_Changed" Unchecked="ProCheck_Changed"/>
+
+                <Button x:Name="AddBtn" Content="Add Lineup" Click="AddBtn_Click"
+                        Background="#f5a623" Foreground="#0f1116" FontWeight="Bold" FontSize="13"
+                        Height="38" Cursor="Hand">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" CornerRadius="8" BorderThickness="0">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+                <TextBlock x:Name="ErrorText" Foreground="#ef4444" FontSize="12" Margin="0,8,0,0" Visibility="Collapsed"/>
+            </StackPanel>
+        </ScrollViewer>
+    </Border>
+</Window>

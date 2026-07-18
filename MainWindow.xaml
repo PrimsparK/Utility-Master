@@ -1,0 +1,42 @@
+﻿<Window
+    x:Class="UtilityMaster.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Utility Master"
+    Width="1400" Height="960" Background="#0f1116">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="48"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Left nav bar -->
+        <Border Grid.Column="0" Background="#0a0c10">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <Border x:Name="NNav" CornerRadius="8" Background="#f5a623" Width="32" Height="32" Margin="0,4" Cursor="Hand"
+                    MouseLeftButtonDown="NadesNav_Click">
+                    <TextBlock Text="N" FontSize="14" FontWeight="Bold" Foreground="#0f1116"
+                        HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Border>
+                <Border x:Name="TNav" CornerRadius="8" Background="#1a1d24" Width="32" Height="32" Margin="0,4" Cursor="Hand"
+                    MouseLeftButtonDown="TricksNav_Click">
+                    <TextBlock Text="T" FontSize="14" FontWeight="Bold" Foreground="#888"
+                        HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Border>
+                <Rectangle Height="1" Width="20" Fill="#2a2d34" Margin="0,8"/>
+                <Border CornerRadius="8" Background="Transparent" Width="32" Height="32" Margin="0,4" Cursor="Hand"
+                    MouseLeftButtonDown="SettingsNav_Click">
+                    <TextBlock Text="S" FontSize="14" FontWeight="Bold" Foreground="#666"
+                        HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Border>
+                <Border CornerRadius="8" Background="Transparent" Width="32" Height="32" Margin="0,4" Cursor="Hand"
+                    MouseLeftButtonDown="AboutNav_Click">
+                    <TextBlock Text="?" FontSize="14" FontWeight="Bold" Foreground="#666"
+                        HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Border>
+            </StackPanel>
+        </Border>
+
+        <Frame x:Name="ContentFrame" Grid.Column="1"/>
+    </Grid>
+</Window>

@@ -1,0 +1,15 @@
+ {
+   "version": 1,
+   "maps": {
+     "de_dust2": { "targets": [], "tricks": { "wallbang": [], "boost": [], "jump": [], "camp": [] } },
+     "de_mirage": { "targets": [], "tricks": { "wallbang": [], "boost": [], "jump": [], "camp": [] } },
+     "de_inferno": { "targets": [], "tricks": { "wallbang": [], "boost": [], "jump": [], "camp": [] } },
+     "de_nuke": { "targets": [], "tricks": { "wallbang": [], "boost": [], "jump": [], "camp": [] } },
+     "de_ancient": { "targets": [], "tricks": { "wallbang": [], "boost": [], "jump": [], "camp": [] } },
+     "de_anubis": { "targets": [], "tricks": { "wallbang": [], "boost": [], "jump": [], "camp": [] } },
+     "de_cache": { "targets": [], "tricks": { "wallbang": [], "boost": [], "jump": [], "camp": [] } },
+     "de_overpass": { "targets": [], "tricks": { "wallbang": [], "boost": [], "jump": [], "camp": [] } },
+     "de_train": { "targets": [], "tricks": { "wallbang": [], "boost": [], "jump": [], "camp": [] } },
+     "de_vertigo": { "targets": [], "tricks": { "wallbang": [], "boost": [], "jump": [], "camp": [] } }
+   }
+ }

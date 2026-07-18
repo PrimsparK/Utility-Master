@@ -1,0 +1,43 @@
+<Window x:Class="UtilityMaster.Views.TrickDetailWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Trick Detail" Width="820" Height="920"
+    WindowStartupLocation="CenterOwner" ResizeMode="CanResize"
+    Background="#1a1d24" Foreground="White">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="24">
+            <TextBlock x:Name="TitleLabel" Text="Trick Detail" FontSize="22" FontWeight="Bold" Margin="0,0,0,8"/>
+            <TextBlock x:Name="TypeSideText" Text="" FontSize="14" Foreground="#888" Margin="0,0,0,4"/>
+            <TextBlock x:Name="CoordText" Text="" FontSize="12" Foreground="#666" Margin="0,0,0,16"/>
+
+            <TextBlock x:Name="ImagesTitle" Text="Images" FontSize="14" FontWeight="Bold" Foreground="#999" Margin="0,0,0,8"/>
+            <Border x:Name="PrimaryImageBorder" BorderBrush="#2a2d34" BorderThickness="1" Margin="0,0,0,8"
+                    Background="#0f1116" HorizontalAlignment="Stretch" MinHeight="300">
+                <Image x:Name="PrimaryImage" Stretch="Uniform" HorizontalAlignment="Center"/>
+            </Border>
+            <StackPanel x:Name="ThumbnailPanel" Orientation="Horizontal" Margin="0,0,0,16"/>
+            <TextBlock x:Name="ImageCountText" Text="" FontSize="12" Foreground="#666" Margin="0,0,0,16"/>
+
+            <TextBlock x:Name="VideoTitle" Text="Video" FontSize="14" FontWeight="Bold" Foreground="#999" Margin="0,0,0,8"
+                       Visibility="Collapsed"/>
+            <MediaElement x:Name="VideoPlayer" LoadedBehavior="Manual" UnloadedBehavior="Stop"
+                          Height="400" Margin="0,0,0,8" Visibility="Collapsed"
+                          MediaFailed="VideoPlayer_MediaFailed"/>
+            <StackPanel x:Name="VideoControls" Orientation="Horizontal" Margin="0,0,0,16" Visibility="Collapsed">
+                <Button Content="&#9654;" Width="32" Height="28" Background="#f5a623" Foreground="#0f1116"
+                        BorderThickness="0" Cursor="Hand" Click="VideoPlay_Click"/>
+                <Button Content="&#9646;&#9646;" Width="32" Height="28" Background="#2a2d34" Foreground="White"
+                        BorderThickness="0" Cursor="Hand" Margin="4,0,0,0" Click="VideoPause_Click"/>
+                <Button Content="&#9632;" Width="32" Height="28" Background="#2a2d34" Foreground="White"
+                        BorderThickness="0" Cursor="Hand" Margin="4,0,0,0" Click="VideoStop_Click"/>
+            </StackPanel>
+            <TextBlock x:Name="VideoLink" Text="" FontSize="13" Foreground="#f5a623" Cursor="Hand"
+                       TextDecorations="Underline" Visibility="Collapsed" MouseLeftButtonDown="VideoLink_Click"/>
+
+            <TextBlock x:Name="NotesTitle" Text="Notes" FontSize="14" FontWeight="Bold" Foreground="#999" Margin="0,0,0,8"/>
+            <Border Background="#0f1116" BorderBrush="#2a2d34" BorderThickness="1" Padding="12" Margin="0,0,0,16">
+                <TextBlock x:Name="NotesText" Text="" FontSize="13" TextWrapping="Wrap"/>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</Window>

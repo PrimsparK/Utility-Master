@@ -1,0 +1,42 @@
+<Page
+    x:Class="UtilityMaster.Views.HomePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid Background="#0f1116">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <!-- Floating app bar -->
+                <Border HorizontalAlignment="Center" Margin="0,12,0,24"
+                        CornerRadius="20" Padding="8,5"
+                        Background="#cc1a1d24" BorderBrush="#33ffffff" BorderThickness="1">
+                    <StackPanel Orientation="Horizontal">
+                        <Border x:Name="NadesPill" CornerRadius="6" Background="#f5a623" Padding="8,4" Margin="0,0,6,0" Cursor="Hand"
+                            MouseLeftButtonDown="NadesNav_Click" Tag="nades">
+                            <TextBlock x:Name="NadesPillText" Text="Nades" FontSize="12" FontWeight="Bold" Foreground="#0f1116"/>
+                        </Border>
+                        <Border x:Name="TricksPill" CornerRadius="6" Background="#1a1d24" Padding="8,4" Margin="0,0,8,0" Cursor="Hand"
+                            MouseLeftButtonDown="NadesNav_Click" Tag="tricks">
+                            <TextBlock x:Name="TricksPillText" Text="Tricks" FontSize="12" Foreground="#888"/>
+                        </Border>
+                        <Rectangle Width="1" Height="18" Fill="#3a3d44" Margin="0,0,8,0"/>
+                        <Border CornerRadius="6" Background="#1a1d24" Padding="8,4" Margin="0,0,6,0" Cursor="Hand"
+                            MouseLeftButtonDown="Nav_Click" Tag="settings">
+                            <TextBlock x:Name="SettingsPillText" Text="Settings" FontSize="12" Foreground="#888"/>
+                        </Border>
+                        <Border CornerRadius="6" Background="#1a1d24" Padding="8,4" Cursor="Hand"
+                            MouseLeftButtonDown="Nav_Click" Tag="about">
+                            <TextBlock x:Name="AboutPillText" Text="About" FontSize="12" Foreground="#888"/>
+                        </Border>
+                    </StackPanel>
+                </Border>
+
+                <UniformGrid x:Name="MapsPanel" Columns="5" Margin="40,0"
+                             HorizontalAlignment="Center"/>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>

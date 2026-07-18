@@ -1,0 +1,94 @@
+<Window
+    x:Class="UtilityMaster.Views.CreateTargetWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Create Spot" Width="360" Height="300"
+    WindowStartupLocation="CenterOwner" ResizeMode="NoResize"
+    WindowStyle="None" AllowsTransparency="True"
+    Background="Transparent">
+    <Border Background="#1a1d24" CornerRadius="12" BorderBrush="#2a2d34" BorderThickness="1">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="20" ShadowDepth="0" Color="#000000" Opacity="0.5"/>
+        </Border.Effect>
+        <Grid Margin="24">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" Margin="0,0,0,16">
+                <TextBlock x:Name="WinTitleLabel" Text="Create Target" FontSize="18" FontWeight="Bold" Foreground="White"
+                           HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <Button Content="&#x2715;" Width="28" Height="28" FontSize="14"
+                        Background="Transparent" Foreground="#666" BorderThickness="0" Cursor="Hand"
+                        HorizontalAlignment="Right" Click="CloseBtn_Click"/>
+            </Grid>
+
+            <!-- Nades Type -->
+            <StackPanel Grid.Row="1" x:Name="NadesTypePanel" Margin="0,0,0,12">
+                <TextBlock x:Name="T_TypeLabel" Text="Type" Foreground="#999" FontSize="12" Margin="0,0,0,4"/>
+                <Border Background="#0f1116" CornerRadius="6" Height="34">
+                    <ComboBox x:Name="TargetType" Background="Transparent" Foreground="White" BorderThickness="0"
+                              VerticalAlignment="Center" FontSize="13" Padding="6,0">
+                        <ComboBoxItem x:Name="CbSmoke" Content="Smoke" Tag="smoke" IsSelected="True"/>
+                        <ComboBoxItem x:Name="CbFlash" Content="Flash" Tag="flash"/>
+                        <ComboBoxItem x:Name="CbMolotov" Content="Molotov" Tag="molotov"/>
+                        <ComboBoxItem x:Name="CbHE" Content="HE" Tag="he"/>
+                    </ComboBox>
+                </Border>
+            </StackPanel>
+            <!-- Tricks Type -->
+            <StackPanel Grid.Row="1" x:Name="TricksTypePanel" Visibility="Collapsed" Margin="0,0,0,12">
+                <TextBlock x:Name="T_TrickTypeLabel" Text="Trick Type" Foreground="#999" FontSize="12" Margin="0,0,0,4"/>
+                <Border Background="#0f1116" CornerRadius="6" Height="34">
+                    <ComboBox x:Name="TrickTypeCombo" Background="Transparent" Foreground="White" BorderThickness="0"
+                              VerticalAlignment="Center" FontSize="13" Padding="6,0">
+                        <ComboBoxItem Content="Wallbang" Tag="wallbang"/>
+                        <ComboBoxItem Content="Boost" Tag="boost"/>
+                        <ComboBoxItem Content="Jump" Tag="jump"/>
+                        <ComboBoxItem Content="Camp" Tag="camp"/>
+                    </ComboBox>
+                </Border>
+            </StackPanel>
+
+            <Grid Grid.Row="2" Margin="0,0,0,8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="8"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <TextBlock x:Name="T_XLabel" Text="Spot X (px)" Foreground="#999" FontSize="12" Margin="0,0,0,4"/>
+                    <Border Background="#0f1116" CornerRadius="6" Height="34">
+                        <TextBox x:Name="TargetX" Background="Transparent" Foreground="White" BorderThickness="0"
+                                 VerticalAlignment="Center" FontSize="13" Padding="10,0"/>
+                    </Border>
+                </StackPanel>
+                <StackPanel Grid.Column="2">
+                    <TextBlock x:Name="T_YLabel" Text="Spot Y (px)" Foreground="#999" FontSize="12" Margin="0,0,0,4"/>
+                    <Border Background="#0f1116" CornerRadius="6" Height="34">
+                        <TextBox x:Name="TargetY" Background="Transparent" Foreground="White" BorderThickness="0"
+                                 VerticalAlignment="Center" FontSize="13" Padding="10,0"/>
+                    </Border>
+                </StackPanel>
+            </Grid>
+
+            <Button Grid.Row="3" x:Name="CreateBtn" Content="Create" Click="CreateBtn_Click"
+                    Background="#f5a623" Foreground="#0f1116" FontWeight="Bold" FontSize="13"
+                    Height="38" Cursor="Hand" Margin="0,16,0,0">
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="8" BorderThickness="0">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+
+            <TextBlock Grid.Row="4" x:Name="ErrorText" Foreground="#ef4444" FontSize="12" Margin="0,8,0,0" Visibility="Collapsed"/>
+        </Grid>
+    </Border>
+</Window>

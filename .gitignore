@@ -1,0 +1,38 @@
+﻿# Build outputs
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+# VS / Rider
+.vs/
+.idea/
+*.DotSettings.user
+
+# Publish output
+publish/
+
+# NuGet
+*.nupkg
+**/packages/*
+
+# OS files
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Database files (auto-generated at runtime)
+*.db
+*.db-shm
+*.db-wal
+
+# Release archives
+release/
+
+# Temp
+*.tmp
+*.orig
+src_backup_extract/
