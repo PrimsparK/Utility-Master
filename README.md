@@ -1,4 +1,9 @@
-﻿# Utility Master
+﻿<!--
+LANG: en-US
+ALTERNATES:
+- lang: zh-CN, path: README.zh-cn.md, title: 中文说明
+-->
+# Utility Master
 
 A tool to check/upload utilities target and lineup for CS2. Fully Vibe-Coding.
 
