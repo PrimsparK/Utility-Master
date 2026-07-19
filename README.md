@@ -32,6 +32,10 @@ MIT License - Open Source
 3. CS2 related trademarks are property of Valve Corporation.
 4. For educational and exchange purposes only.
 
+## Future Updates
+1. Update the default nades/tricks for most of maps. 
+2. More functions?
+
 ---
 
 v1.0.0
