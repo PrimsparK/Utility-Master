@@ -50,6 +50,7 @@ dotnet run --project UtilityMaster.csproj
 ## Release Builds
 
 Packaged application binaries are not committed to the source repository. They are distributed separately in Releases. A release archive only contains the runnable application, its runtime dependencies, and required assets, without source code, build intermediates, or developer tooling files.
+Release archives keep only English, Simplified Chinese, and Traditional Chinese language resources. Other language resources are not packaged.
 
 ## Future Updates
 1. Update the default nades/tricks for most of maps. 
