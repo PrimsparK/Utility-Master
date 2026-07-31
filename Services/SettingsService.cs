@@ -33,7 +33,7 @@ public static class SettingsService
             if (File.Exists(FilePath))
                 return JsonSerializer.Deserialize<SettingsData>(File.ReadAllText(FilePath)) ?? new();
         }
-        catch { }
+        catch (Exception ex) { System.Diagnostics.Debug.WriteLine(ex.Message); }
         return new SettingsData();
     }
 
@@ -43,3 +43,4 @@ public static class SettingsService
         File.WriteAllText(FilePath, JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true }));
     }
 }
+

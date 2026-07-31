@@ -1,4 +1,4 @@
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -71,10 +71,17 @@ public partial class HomePage : Page
         {
             var card = new Border
             {
-                Width = 180, Height = 150, Margin = new Thickness(8),
-                CornerRadius = new CornerRadius(10),
-                Background = new SolidColorBrush(Color.FromRgb(0x14, 0x16, 0x1c)),
-                BorderBrush = new SolidColorBrush(Color.FromRgb(0x2a, 0x2d, 0x34)),
+            Width = 180, Height = 150, Margin = new Thickness(8),
+            CornerRadius = new CornerRadius(10),
+            Background = new SolidColorBrush(Color.FromRgb(0x14, 0x16, 0x1c)),
+            Effect = new System.Windows.Media.Effects.DropShadowEffect
+            {
+                BlurRadius = 12,
+                ShadowDepth = 2,
+                Color = Color.FromRgb(0, 0, 0),
+                Opacity = 0.3
+            },
+            BorderBrush = new SolidColorBrush(Color.FromRgb(0x2a, 0x2d, 0x34)),
                 BorderThickness = new Thickness(1),
                 Cursor = Cursors.Hand
             };
@@ -99,7 +106,7 @@ public partial class HomePage : Page
 
             var text = new TextBlock
             {
-                Text = showCn ? GetChineseName(map.Id) : map.DisplayName,
+                Text = showCn ? MapNames.GetChineseName(map.Id) : map.DisplayName,
                 FontSize = 13, FontWeight = FontWeights.SemiBold,
                 Foreground = new SolidColorBrush(Color.FromRgb(0xcc, 0xcc, 0xcc)),
                 HorizontalAlignment = HorizontalAlignment.Center,
@@ -109,8 +116,16 @@ public partial class HomePage : Page
             grid.Children.Add(text);
 
             card.Child = grid;
-            card.MouseEnter += (_, _) => card.BorderBrush = new SolidColorBrush(Color.FromRgb(0xf5, 0xa6, 0x23));
-            card.MouseLeave += (_, _) => card.BorderBrush = new SolidColorBrush(Color.FromRgb(0x2a, 0x2d, 0x34));
+            card.MouseEnter += (_, _) =>
+            {
+                card.BorderBrush = new SolidColorBrush(Color.FromRgb(0xf5, 0xa6, 0x23));
+                card.Background = new SolidColorBrush(Color.FromRgb(0x1a, 0x1d, 0x26));
+            };
+            card.MouseLeave += (_, _) =>
+            {
+                card.BorderBrush = new SolidColorBrush(Color.FromRgb(0x2a, 0x2d, 0x34));
+                card.Background = new SolidColorBrush(Color.FromRgb(0x14, 0x16, 0x1c));
+            };
 
             var mapId = map.Id;
             var mode = _mode;
@@ -123,21 +138,6 @@ public partial class HomePage : Page
             MapsPanel.Children.Add(card);
         }
     }
-
-    private static string GetChineseName(string mapId) => mapId switch
-    {
-        "de_dust2" => "炙热沙城2",
-        "de_mirage" => "荒漠迷城",
-        "de_inferno" => "炼狱小镇",
-        "de_nuke" => "核子危机",
-        "de_ancient" => "远古遗迹",
-        "de_anubis" => "阿努比斯",
-        "de_cache" => "死城之谜",
-        "de_overpass" => "死亡游乐园",
-        "de_train" => "列车停放站",
-        "de_vertigo" => "殒命大厦",
-        _ => mapId
-    };
 
     private void NadesNav_Click(object sender, MouseButtonEventArgs e)
     {

@@ -6,7 +6,7 @@
     Title="Lineup Detail" Width="860" Height="960"
     MinWidth="520" MinHeight="600"
     WindowStartupLocation="CenterOwner" ResizeMode="CanResize"
-    Background="#1a1d24">
+    Background="#0f1116">
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="24">
             <!-- Variant navigation -->

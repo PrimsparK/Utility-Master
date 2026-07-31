@@ -1,4 +1,4 @@
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -6,9 +6,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.IO;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using UtilityMaster.Models;
-using UtilityMaster.Data;
 using UtilityMaster.Services;
 
 namespace UtilityMaster.Views;
@@ -28,7 +26,7 @@ public partial class MapView : Page
     private double _zoom = 1.0;
     private double _minZoom;
     private Ellipse? _previewMarker;
-    private AppDbContext? _db;
+    private IDataService? _dataService;
     private ProfileEntity? _activeProfile;
     private List<TargetEntity> _mapTargets = new();
     private List<TrickEntity> _mapTricks = new();
@@ -65,8 +63,8 @@ public partial class MapView : Page
             MapImage.Source = bmp;
         }
         if (_mapInfo.HasLowerFloor) { FloorPanel.Visibility = Visibility.Visible; TricksFloorPanel.Visibility = Visibility.Visible; }
-        _db = DatabaseService.CreateContext();
-        _activeProfile = _db.Profiles.FirstOrDefault(); if (_activeProfile != null) { var sets = SettingsService.Load(); _activeProfile.AllowDeleteDefaultSpots = sets.AllowDeleteDefaults; }
+        _dataService = ((App)Application.Current).DataService;
+        _activeProfile = _dataService.GetActiveProfile(); if (_activeProfile != null) { var sets = SettingsService.Load(); _activeProfile.AllowDeleteDefaultSpots = sets.AllowDeleteDefaults; }
         if (_mode == "nades") { ReloadTargets(); UpdateFilterHighlights(); } else { _activeType = "wallbang"; ReloadTricks(); UpdateTrickFilterHighlights(); }
         ApplyLocalization();
         Dispatcher.BeginInvoke(new Action(() => TryDelayedInit()), System.Windows.Threading.DispatcherPriority.Loaded);
@@ -79,7 +77,7 @@ public partial class MapView : Page
         var items = HomePage.Maps.Select(m => new MapInfo
         {
             Id = m.Id,
-            DisplayName = showCn ? GetMapChineseName(m.Id) : m.DisplayName,
+            DisplayName = showCn ? MapNames.GetChineseName(m.Id) : m.DisplayName,
             RadarPath = m.RadarPath,
             LowerRadarPath = m.LowerRadarPath,
             HasLowerFloor = m.HasLowerFloor,
@@ -99,21 +97,6 @@ public partial class MapView : Page
             MapSwitcherTricks.Items.Add(item2);
         }
     }
-
-    private static string GetMapChineseName(string mapId) => mapId switch
-    {
-        "de_dust2" => "炙热沙城2",
-        "de_mirage" => "荒漠迷城",
-        "de_inferno" => "炼狱小镇",
-        "de_nuke" => "核子危机",
-        "de_ancient" => "远古遗迹",
-        "de_anubis" => "阿努比斯",
-        "de_cache" => "死城之谜",
-        "de_overpass" => "死亡游乐园",
-        "de_train" => "列车停放站",
-        "de_vertigo" => "殒命大厦",
-        _ => mapId
-    };
 
     private void MapSwitcher_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
@@ -172,16 +155,16 @@ public partial class MapView : Page
 
     private void ReloadTargets()
     {
-        if (_db == null || _activeProfile == null) return;
-        _mapTargets = _db.Targets.Include(t => t.Lineups).ThenInclude(l => l.AimPoints).Where(t => t.ProfileId == _activeProfile.Id && t.MapId == _mapId && (t.Type == "smoke" || t.Type == "flash" || t.Type == "molotov" || t.Type == "he")).AsNoTracking().ToList();
+        if (_dataService == null || _activeProfile == null) return;
+        _mapTargets = _dataService.GetAllTargets(_activeProfile.Id, _mapId);
         DrawTargets();
     }
 
     private void ReloadTricks()
     {
-        if (_db == null || _activeProfile == null) return;
-        _mapTricks = _db.Tricks.Where(t => t.ProfileId == _activeProfile.Id && t.MapId == _mapId).AsNoTracking().ToList();
-        _mapTargets = _db.Targets.Include(t => t.Lineups).ThenInclude(l => l.AimPoints).Where(t => t.ProfileId == _activeProfile.Id && t.MapId == _mapId && (t.Type == "wallbang" || t.Type == "jump")).AsNoTracking().ToList();
+        if (_dataService == null || _activeProfile == null) return;
+        _mapTricks = _dataService.GetTricks(_activeProfile.Id, _mapId);
+        _mapTargets = _dataService.GetAllTargets(_activeProfile.Id, _mapId).Where(t => t.Type == "wallbang" || t.Type == "jump").ToList();
         DrawTricks();
     }
 
@@ -582,7 +565,7 @@ public partial class MapView : Page
             (_activeSide == "Both" || t.Side == _activeSide) &&
             Dist(new Point(t.X, t.Y), x, y) < threshold);
 
-        if (nearbyTarget != null && _db != null)
+        if (nearbyTarget != null && _dataService != null)
         {
             // Merge: skip CreateTargetWindow, go straight to AddLineupWindow for this existing target
             var msg = Loc.F("nearby.msg", nearbyTarget.Name);
@@ -594,10 +577,10 @@ public partial class MapView : Page
         }
 
         ShowPreviewMarker(x, y);
-        var w = new CreateTargetWindow(x, y, target => { RemovePreviewMarker(); if (_db == null || _activeProfile == null) return; target.ProfileId = _activeProfile.Id; target.MapId = _mapId; target.Floor = _activeFloor; _db.Targets.Add(target); _db.SaveChanges();
+        var w = new CreateTargetWindow(x, y, target => { RemovePreviewMarker(); if (_dataService == null || _activeProfile == null) return; target.ProfileId = _activeProfile.Id; target.MapId = _mapId; target.Floor = _activeFloor; _dataService.AddTarget(target);
             Dispatcher.BeginInvoke(new Action(() => {
                 var lw = new AddLineupWindow(x + 100, y + 50) { Owner = Window.GetWindow(this) };
-                ShowLineupWindowWithPick(lw, finalLw => { if (finalLw.Confirmed) { _db.Lineups.Add(new LineupEntity { TargetId = target.Id, Name = finalLw.LineupNameValue, Side = finalLw.SideValue, Sequence = 1, X = finalLw.X, Y = finalLw.Y, Floor = _activeFloor, AimDescription = finalLw.AimDescription, ThrowType = finalLw.ThrowTypeValue, VideoUrl = finalLw.VideoUrlValue, Notes = finalLw.NotesValue, ImagesJson = finalLw.ImagesJson, IsDefault = false, IsPro = finalLw.IsPro, CreatedAt = DateTime.UtcNow }); _db.SaveChanges(); } else { _db.Targets.Remove(_db.Targets.Find(target.Id)!); _db.SaveChanges(); } _highlightedTargetId = null; ReloadTargets(); });
+                ShowLineupWindowWithPick(lw, finalLw => { if (finalLw.Confirmed) { _dataService.AddLineup(new LineupEntity { TargetId = target.Id, Name = finalLw.LineupNameValue, Side = finalLw.SideValue, Sequence = 1, X = finalLw.X, Y = finalLw.Y, Floor = _activeFloor, AimDescription = finalLw.AimDescription, ThrowType = finalLw.ThrowTypeValue, VideoUrl = finalLw.VideoUrlValue, Notes = finalLw.NotesValue, ImagesJson = finalLw.ImagesJson, IsDefault = false, IsPro = finalLw.IsPro, CreatedAt = DateTime.UtcNow }); } else { _dataService.DeleteTarget(target.Id); _dataService.SaveChanges(); } _highlightedTargetId = null; ReloadTargets(); });
             }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
         }) { Owner = Window.GetWindow(this) };
         w.Closed += (_, _) => RemovePreviewMarker(); w.ShowDialog();
@@ -650,12 +633,10 @@ public partial class MapView : Page
 
     private void DeleteTarget(Guid id)
     {
-        if (_db == null) return; var t = _db.Targets.Include(x => x.Lineups).FirstOrDefault(x => x.Id == id); if (t == null) return;
+        if (_dataService == null) return; var t = _dataService.GetTarget(id); if (t == null) return;
         if (t.IsDefault && _activeProfile != null && !_activeProfile.AllowDeleteDefaultSpots) { MessageBox.Show(Loc.Get("map.protected"), Loc.Get("map.protected_title"), MessageBoxButton.OK, MessageBoxImage.Warning); return; }
         if (MessageBox.Show(Loc.F("map.delete_confirm", t.Name, t.Lineups.Count), Loc.Get("map.delete_title"), MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
-        _db.Lineups.RemoveRange(t.Lineups); _db.Targets.Remove(t); _db.SaveChanges();
-        _db.Entry(t).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
-        foreach (var l in t.Lineups) _db.Entry(l).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
+        _dataService.DeleteTarget(t.Id);
         _mapTargets.RemoveAll(x => x.Id == id);
         _highlightedTargetId = null;
         // Remove just this target's UI elements from canvas (no full redraw)
@@ -671,14 +652,14 @@ public partial class MapView : Page
 
     private void EditTargetT(TargetEntity t)
     {
-        if (_db == null) return;
+        if (_dataService == null) return;
         if (t.IsDefault && _activeProfile != null && !_activeProfile.AllowDeleteDefaultSpots) { MessageBox.Show(Loc.Get("map.protected"), Loc.Get("map.protected_title"), MessageBoxButton.OK, MessageBoxImage.Warning); return; }
-        var fresh = _db.Targets.FirstOrDefault(x => x.Id == t.Id);
+        var fresh = _dataService.GetTarget(t.Id);
         if (fresh == null) return;
         var w = new CreateTargetWindow(fresh.X, fresh.Y, target => {
             fresh.Name = target.Name; fresh.Type = target.Type; fresh.Side = target.Side;
             fresh.X = target.X; fresh.Y = target.Y; fresh.Image = target.Image;
-            _db.SaveChanges(); ReloadTargets();
+            _dataService.SaveChanges(); ReloadTargets();
         }) { Owner = Window.GetWindow(this) };
         w.SetExistingValues(t.Name, t.Type, t.Side, t.X, t.Y, t.Image);
         if (t.Type == "wallbang" || t.Type == "jump") w.SetTrickContext(t.Type);
@@ -687,22 +668,22 @@ public partial class MapView : Page
 
     private void DeleteLineupT(TargetEntity t, LineupEntity l)
     {
-        if (_db == null) return;
+        if (_dataService == null) return;
         if (t.Lineups.Count <= 1) { MessageBox.Show(Loc.Get("map.min_lineup"), Loc.Get("map.cannot_delete"), MessageBoxButton.OK, MessageBoxImage.Warning); return; }
         if (l.IsDefault && _activeProfile != null && !_activeProfile.AllowDeleteDefaultSpots) { MessageBox.Show(Loc.Get("map.protected"), Loc.Get("map.protected_title"), MessageBoxButton.OK, MessageBoxImage.Warning); return; }
         if (MessageBox.Show("Delete lineup #" + l.Sequence + "?", "Delete Lineup", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
-        var fresh = _db.Lineups.FirstOrDefault(x => x.Id == l.Id);
+        var fresh = _dataService.GetLineup(l.Id);
         if (fresh == null) return;
-        _db.Lineups.Remove(fresh);
-        var remaining = _db.Lineups.Where(x => x.TargetId == t.Id).OrderBy(x => x.Sequence).ToList();
+        _dataService.DeleteLineup(fresh.Id);
+        var remaining = _dataService.GetLineupsQuery(t.Id);
         for (int i = 0; i < remaining.Count; i++) remaining[i].Sequence = i + 1;
-        _db.SaveChanges();
+        _dataService.SaveChanges();
         ReloadTargets();
     }
 
     private void EditLineupT(TargetEntity t, LineupEntity l)
     {
-        if (_db == null) return;
+        if (_dataService == null) return;
         if (l.IsDefault && _activeProfile != null && !_activeProfile.AllowDeleteDefaultSpots) { MessageBox.Show(Loc.Get("map.protected"), Loc.Get("map.protected_title"), MessageBoxButton.OK, MessageBoxImage.Warning); return; }
         var lw = new AddLineupWindow(l.X, l.Y) { Owner = Window.GetWindow(this) };
         lw.PreFillFull(l.Name ?? "", l.Side ?? "T", l.AimDescription ?? "", l.ThrowType ?? "standing", l.VideoUrl ?? "", l.Notes ?? "");
@@ -723,7 +704,7 @@ public partial class MapView : Page
                         "Lineup Variant", MessageBoxButton.YesNo, MessageBoxImage.Question);
                     if (result == MessageBoxResult.Yes)
                     {
-                        var freshNearby = _db!.Lineups.FirstOrDefault(x => x.Id == nearby.Id);
+                        var freshNearby = _dataService.GetLineup(nearby.Id);
                         if (freshNearby != null)
                         {
                             freshNearby.X = finalLw.X; freshNearby.Y = finalLw.Y;
@@ -735,18 +716,18 @@ public partial class MapView : Page
                             freshNearby.ImagesJson = finalLw.ImagesJson;
                             freshNearby.IsPro = finalLw.IsPro;
                             // Remove the old lineup
-                            var oldFresh = _db.Lineups.FirstOrDefault(x => x.Id == l.Id);
-                            if (oldFresh != null) _db.Lineups.Remove(oldFresh);
+                            var oldFresh = _dataService.GetLineup(l.Id);
+                            if (oldFresh != null) _dataService.DeleteLineup(oldFresh.Id);
                             // Re-sequence
-                            var remaining = _db.Lineups.Where(x => x.TargetId == t.Id).OrderBy(x => x.Sequence).ToList();
+                            var remaining = _dataService.GetLineupsQuery(t.Id);
                             for (int i = 0; i < remaining.Count; i++) remaining[i].Sequence = i + 1;
-                            _db.SaveChanges();
+                            _dataService.SaveChanges();
                         }
                     }
                 }
                 else
                 {
-                    var fresh = _db!.Lineups.FirstOrDefault(x => x.Id == l.Id);
+                    var fresh = _dataService.GetLineup(l.Id);
                     if (fresh != null) {
                         fresh.X = finalLw.X; fresh.Y = finalLw.Y;
                         fresh.Name = finalLw.LineupNameValue; fresh.Side = finalLw.SideValue;
@@ -756,7 +737,7 @@ public partial class MapView : Page
                         fresh.Notes = finalLw.NotesValue;
                         fresh.ImagesJson = finalLw.ImagesJson;
                         fresh.IsPro = finalLw.IsPro;
-                        _db.SaveChanges();
+                        _dataService.SaveChanges();
                     }
                 }
             }
@@ -766,7 +747,7 @@ public partial class MapView : Page
 
     private void AddLineupToTarget(Guid tid)
     {
-        var t = _mapTargets.FirstOrDefault(x => x.Id == tid); if (t == null || _db == null) return;
+        var t = _mapTargets.FirstOrDefault(x => x.Id == tid); if (t == null || _dataService == null) return;
         var lw = new AddLineupWindow(t.X + 100, t.Y + 50) { Owner = Window.GetWindow(this) };
         ShowLineupWindowWithPick(lw, finalLw => {
             if (finalLw.Confirmed)
@@ -782,7 +763,7 @@ public partial class MapView : Page
                         "Lineup Variant", MessageBoxButton.YesNo, MessageBoxImage.Question);
                     if (result == MessageBoxResult.Yes)
                     {
-                        var fresh = _db!.Lineups.FirstOrDefault(x => x.Id == nearbyLineup.Id);
+                        var fresh = _dataService.GetLineup(nearbyLineup.Id);
                         if (fresh != null)
                         {
                             fresh.X = finalLw.X; fresh.Y = finalLw.Y;
@@ -791,15 +772,15 @@ public partial class MapView : Page
                             fresh.VideoUrl = finalLw.VideoUrlValue;
                             fresh.Notes = finalLw.NotesValue;
                             fresh.ImagesJson = finalLw.ImagesJson;
-                            _db.SaveChanges();
+                            _dataService.SaveChanges();
                         }
                     }
                 }
                 else
                 {
                     int ms = t.Lineups.Select(x => (int?)x.Sequence).Max() ?? 0;
-                    _db!.Lineups.Add(new LineupEntity { TargetId = tid, Name = finalLw.LineupNameValue, Side = finalLw.SideValue, Sequence = ms + 1, X = finalLw.X, Y = finalLw.Y, Floor = _activeFloor, AimDescription = finalLw.AimDescription, ThrowType = finalLw.ThrowTypeValue, VideoUrl = finalLw.VideoUrlValue, Notes = finalLw.NotesValue, ImagesJson = finalLw.ImagesJson, IsDefault = false, IsPro = finalLw.IsPro, CreatedAt = DateTime.UtcNow });
-                    _db.SaveChanges();
+                    _dataService.AddLineup(new LineupEntity { TargetId = tid, Name = finalLw.LineupNameValue, Side = finalLw.SideValue, Sequence = ms + 1, X = finalLw.X, Y = finalLw.Y, Floor = _activeFloor, AimDescription = finalLw.AimDescription, ThrowType = finalLw.ThrowTypeValue, VideoUrl = finalLw.VideoUrlValue, Notes = finalLw.NotesValue, ImagesJson = finalLw.ImagesJson, IsDefault = false, IsPro = finalLw.IsPro, CreatedAt = DateTime.UtcNow });
+                    _dataService.SaveChanges();
                    
                    
                 }
@@ -812,7 +793,7 @@ public partial class MapView : Page
     public void OpenCreateTrickAt(double x, double y)
     {
         ShowPreviewMarker(x, y);
-        var w = new CreateTrickWindow(x, y, trick => { RemovePreviewMarker(); if (_db == null || _activeProfile == null) return; trick.ProfileId = _activeProfile.Id; trick.MapId = _mapId; trick.Floor = _activeFloor; trick.Type = trick.Type; _db.Tricks.Add(trick); _db.SaveChanges(); ReloadTricks(); }) { Owner = Window.GetWindow(this) };
+        var w = new CreateTrickWindow(x, y, trick => { RemovePreviewMarker(); if (_dataService == null || _activeProfile == null) return; trick.ProfileId = _activeProfile.Id; trick.MapId = _mapId; trick.Floor = _activeFloor; trick.Type = trick.Type; _dataService.AddTrick(trick); ReloadTricks(); }) { Owner = Window.GetWindow(this) };
         w.PreSelectType(_activeType);
         w.Closed += (_, _) => RemovePreviewMarker(); w.ShowDialog();
     }
@@ -824,7 +805,7 @@ public partial class MapView : Page
         var defType = SettingsService.Load().DefaultTrickType;
         var w = new CreateTrickWindow(x, y, trick => {
             RemovePreviewMarker();
-            if (_db == null || _activeProfile == null) return;
+            if (_dataService == null || _activeProfile == null) return;
             trick.ProfileId = _activeProfile.Id;
             trick.MapId = _mapId;
             trick.Floor = _activeFloor;
@@ -839,8 +820,7 @@ public partial class MapView : Page
                     X = trick.X, Y = trick.Y, Floor = _activeFloor,
                     IsDefault = false, CreatedAt = DateTime.UtcNow
                 };
-                _db.Targets.Add(target);
-                _db.SaveChanges();
+                _dataService.AddTarget(target);
 
                 // Defer showing lineup window until after CreateTrickWindow is fully closed
                 Dispatcher.BeginInvoke(new Action(() => {
@@ -848,7 +828,7 @@ public partial class MapView : Page
                     ShowLineupWindowWithPick(lw, finalLw => {
                         if (finalLw.Confirmed)
                         {
-                            _db.Lineups.Add(new LineupEntity {
+                            _dataService.AddLineup(new LineupEntity {
                                 TargetId = target.Id, Name = finalLw.LineupNameValue, Side = finalLw.SideValue, Sequence = 1,
                                 X = finalLw.X, Y = finalLw.Y, Floor = _activeFloor,
                                 AimDescription = finalLw.AimDescription,
@@ -858,13 +838,12 @@ public partial class MapView : Page
                                 ImagesJson = finalLw.ImagesJson,
                                 IsDefault = false, IsPro = finalLw.IsPro, CreatedAt = DateTime.UtcNow
                             });
-                            _db.SaveChanges();
                            
                         }
                         else
                         {
-                            var t = _db.Targets.Find(target.Id);
-                            if (t != null) { _db.Targets.Remove(t); _db.SaveChanges(); }
+                            var t = _dataService.GetTarget(target.Id);
+                            if (t != null) { _dataService.DeleteTarget(t.Id); _dataService.SaveChanges(); }
                         }
                         _highlightedTargetId = null;
                         ReloadTricks();
@@ -873,8 +852,7 @@ public partial class MapView : Page
             }
             else
             {
-                _db.Tricks.Add(trick);
-                _db.SaveChanges();
+                _dataService.AddTrick(trick);
                 ReloadTricks();
             }
         }) { Owner = Window.GetWindow(this) };
@@ -892,19 +870,17 @@ public partial class MapView : Page
         var trickSide = trickType == "jump" ? "Both" : (_activeSide == "Both" ? "T" : _activeSide);
         var w = new CreateTargetWindow(x, y, target => {
             RemovePreviewMarker();
-            if (_db == null || _activeProfile == null) return;
+            if (_dataService == null || _activeProfile == null) return;
             target.ProfileId = _activeProfile.Id;
             target.MapId = _mapId;
             target.Floor = _activeFloor;
             target.Type = trickType;
             target.Side = trickSide;
-            _db.Targets.Add(target);
-            _db.SaveChanges();
+            _dataService.AddTarget(target);
             var lw = new AddLineupWindow(x + 100, y + 50) { Owner = Window.GetWindow(this) };
             ShowLineupWindowWithPick(lw, finalLw => {
                 if (finalLw.Confirmed) {
-                    _db.Lineups.Add(new LineupEntity { TargetId = target.Id, Name = finalLw.LineupNameValue, Side = finalLw.SideValue, Sequence = 1, X = finalLw.X, Y = finalLw.Y, Floor = _activeFloor, AimDescription = finalLw.AimDescription, ThrowType = finalLw.ThrowTypeValue, VideoUrl = finalLw.VideoUrlValue, Notes = finalLw.NotesValue, ImagesJson = finalLw.ImagesJson, IsDefault = false, IsPro = finalLw.IsPro, CreatedAt = DateTime.UtcNow });
-                    _db.SaveChanges();
+                    _dataService.AddLineup(new LineupEntity { TargetId = target.Id, Name = finalLw.LineupNameValue, Side = finalLw.SideValue, Sequence = 1, X = finalLw.X, Y = finalLw.Y, Floor = _activeFloor, AimDescription = finalLw.AimDescription, ThrowType = finalLw.ThrowTypeValue, VideoUrl = finalLw.VideoUrlValue, Notes = finalLw.NotesValue, ImagesJson = finalLw.ImagesJson, IsDefault = false, IsPro = finalLw.IsPro, CreatedAt = DateTime.UtcNow });
                    
                 }
                 _highlightedTargetId = null;
@@ -918,26 +894,26 @@ public partial class MapView : Page
 
     private void EditTrickT(TrickEntity trick)
     {
-        if (_db == null) return;
+        if (_dataService == null) return;
         if (trick.IsDefault && _activeProfile != null && !_activeProfile.AllowDeleteDefaultSpots) { MessageBox.Show(Loc.Get("map.protected"), Loc.Get("map.protected_title"), MessageBoxButton.OK, MessageBoxImage.Warning); return; }
-        var fresh = _db.Tricks.FirstOrDefault(x => x.Id == trick.Id);
+        var fresh = _dataService.GetTrick(trick.Id);
         if (fresh == null) return;
-        var w = new CreateTrickWindow(fresh.X, fresh.Y, updated => {
-            fresh.Name = updated.Name; fresh.Type = updated.Type; fresh.Side = updated.Side;
-            fresh.X = updated.X; fresh.Y = updated.Y; fresh.VideoUrl = updated.VideoUrl;
-            fresh.Notes = updated.Notes;
-            _db.SaveChanges(); ReloadTricks();
-        }) { Owner = Window.GetWindow(this) };
-        w.SetExistingValues(trick.Name, trick.Type, trick.Side ?? "", trick.X, trick.Y, trick.VideoUrl, trick.Notes);
+       var w = new CreateTrickWindow(fresh.X, fresh.Y, updated => {
+           fresh.Name = updated.Name; fresh.Type = updated.Type; fresh.Side = updated.Side;
+           fresh.X = updated.X; fresh.Y = updated.Y; fresh.VideoUrl = updated.VideoUrl;
+            fresh.Notes = updated.Notes; fresh.ImagesJson = updated.ImagesJson;
+           _dataService.SaveChanges(); ReloadTricks();
+       }) { Owner = Window.GetWindow(this) };
+        w.SetExistingValues(trick.Name, trick.Type, trick.Side ?? "", trick.X, trick.Y, trick.VideoUrl, trick.Notes, trick.ImagesJson);
         w.ShowDialog();
     }
 
     private void DeleteTrick(Guid id)
     {
-        if (_db == null) return; var t = _db.Tricks.FirstOrDefault(x => x.Id == id); if (t == null) return;
+        if (_dataService == null) return; var t = _dataService.GetTrick(id); if (t == null) return;
         if (t.IsDefault && _activeProfile != null && !_activeProfile.AllowDeleteDefaultSpots) { MessageBox.Show(Loc.Get("map.protected"), Loc.Get("map.protected_title"), MessageBoxButton.OK, MessageBoxImage.Warning); return; }
         if (MessageBox.Show(Loc.F("map.delete_confirm", t.Name, 0), Loc.Get("map.delete_title"), MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
-        _db.Tricks.Remove(t); _db.SaveChanges();
+        _dataService.DeleteTrick(t.Id); _dataService.SaveChanges();
         ReloadTricks();
     }
 
@@ -1051,12 +1027,12 @@ public partial class MapView : Page
     }
         private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
     {
-        if (_db == null) return;
+        if (_dataService == null) return;
         var query = SearchBox.Text.Trim().ToLower();
         TargetList.Items.Clear();
 
         // Search across ALL floors for the query
-        var allTargets = _db.Targets.Where(t => t.ProfileId == _activeProfile!.Id && t.MapId == _mapId && t.Type == _activeType && (_activeSide == "Both" || t.Side == _activeSide)).AsNoTracking().ToList();
+        var allTargets = _dataService.GetAllTargets(_activeProfile!.Id, _mapId, _activeType).Where(t => (_activeSide == "Both" || t.Side == _activeSide)).ToList();
         var filtered = string.IsNullOrEmpty(query)
             ? allTargets
             : allTargets.Where(t => t.Name.ToLower().Contains(query)).ToList();
@@ -1093,7 +1069,6 @@ public partial class MapView : Page
         }
     }
 }
-
 
 
 

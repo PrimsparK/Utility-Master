@@ -1,4 +1,4 @@
- using Microsoft.EntityFrameworkCore;
+﻿ using Microsoft.EntityFrameworkCore;
  using UtilityMaster.Models;
 
  namespace UtilityMaster.Data;
@@ -31,6 +31,11 @@
          {
              e.HasKey(t => t.Id);
              e.HasOne(t => t.Profile).WithMany(p => p.Tricks).HasForeignKey(t => t.ProfileId);
+        modelBuilder.Entity<AimPointEntity>(e =>
+        {
+            e.HasKey(a => a.Id);
+            e.HasOne(a => a.Lineup).WithMany(l => l.AimPoints).HasForeignKey(a => a.LineupId);
+        });
          });
 
          modelBuilder.Entity<ProfileEntity>(e =>

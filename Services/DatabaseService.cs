@@ -1,6 +1,5 @@
- using Microsoft.EntityFrameworkCore;
-using UtilityMaster.Data;
 using Microsoft.EntityFrameworkCore;
+using UtilityMaster.Data;
 using UtilityMaster.Models;
 using System.Text.Json;
  using System.IO;
@@ -94,12 +93,100 @@ namespace UtilityMaster.Services;
                                  }
                              }
                          }
-                     }
-                 }
-             }
-         }
+                    }
+                }
+            }
+            // Import default tricks (wallbang/jump -> Target+Lineup, boost/camp -> TrickEntity)
+            if (config?.Maps != null)
+            {
+                foreach (var (mapId, mapData) in config.Maps)
+                {
+                    if (mapData.Tricks == null) continue;
+                    if (mapData.Tricks.Wallbang != null)
+                    {
+                        foreach (var t in mapData.Tricks.Wallbang)
+                        {
+                            var target = new TargetEntity
+                            {
+                                ProfileId = profile.Id, MapId = mapId,
+                                Name = t.Name, Type = "wallbang",
+                                Side = t.Side ?? "Both", X = t.X, Y = t.Y,
+                                Floor = t.Floor ?? "default", IsDefault = true,
+                                CreatedAt = DateTime.UtcNow
+                            };
+                            db.Targets.Add(target);
+                            db.Lineups.Add(new LineupEntity
+                            {
+                                TargetId = target.Id, Name = t.Name,
+                                Sequence = 1, X = t.X, Y = t.Y,
+                                Floor = t.Floor ?? "default",
+                                ImagesJson = JsonSerializer.Serialize(t.Images ?? new List<string>()),
+                                VideoUrl = t.VideoUrl, Notes = t.Notes,
+                                IsDefault = true, CreatedAt = DateTime.UtcNow
+                            });
+                        }
+                    }
+                    if (mapData.Tricks.Jump != null)
+                    {
+                        foreach (var t in mapData.Tricks.Jump)
+                        {
+                            var target = new TargetEntity
+                            {
+                                ProfileId = profile.Id, MapId = mapId,
+                                Name = t.Name, Type = "jump",
+                                Side = t.Side ?? "Both", X = t.X, Y = t.Y,
+                                Floor = t.Floor ?? "default", IsDefault = true,
+                                CreatedAt = DateTime.UtcNow
+                            };
+                            db.Targets.Add(target);
+                            db.Lineups.Add(new LineupEntity
+                            {
+                                TargetId = target.Id, Name = t.Name,
+                                Sequence = 1, X = t.X, Y = t.Y,
+                                Floor = t.Floor ?? "default",
+                                ImagesJson = JsonSerializer.Serialize(t.Images ?? new List<string>()),
+                                VideoUrl = t.VideoUrl, Notes = t.Notes,
+                                IsDefault = true, CreatedAt = DateTime.UtcNow
+                            });
+                        }
+                    }
+                    if (mapData.Tricks.Boost != null)
+                    {
+                        foreach (var t in mapData.Tricks.Boost)
+                        {
+                            db.Tricks.Add(new TrickEntity
+                            {
+                                ProfileId = profile.Id, MapId = mapId,
+                                Name = t.Name, Type = "boost",
+                                Side = t.Side ?? "Both", X = t.X, Y = t.Y,
+                                Floor = t.Floor ?? "default",
+                                ImagesJson = JsonSerializer.Serialize(t.Images ?? new List<string>()),
+                                VideoUrl = t.VideoUrl, Notes = t.Notes,
+                                IsDefault = true, CreatedAt = DateTime.UtcNow
+                            });
+                        }
+                    }
+                    if (mapData.Tricks.Camp != null)
+                    {
+                        foreach (var t in mapData.Tricks.Camp)
+                        {
+                            db.Tricks.Add(new TrickEntity
+                            {
+                                ProfileId = profile.Id, MapId = mapId,
+                                Name = t.Name, Type = "camp",
+                                Side = t.Side ?? "Both", X = t.X, Y = t.Y,
+                                Floor = t.Floor ?? "default",
+                                ImagesJson = JsonSerializer.Serialize(t.Images ?? new List<string>()),
+                                VideoUrl = t.VideoUrl, Notes = t.Notes,
+                                IsDefault = true, CreatedAt = DateTime.UtcNow
+                            });
+                        }
+                    }
+                }
+            }
+        }
 
-         db.SaveChanges();
+        db.SaveChanges();
      }
 
      private class DefaultConfig

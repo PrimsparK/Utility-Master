@@ -10,7 +10,7 @@
             <Grid Margin="0,0,0,16">
                 <Grid.ColumnDefinitions><ColumnDefinition Width="140"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
                 <TextBlock x:Name="LblDefType" Text="Default Type" Foreground="#999" VerticalAlignment="Center"/>
-                <ComboBox x:Name="DefType" Grid.Column="1" Background="#1a1d24" Foreground="White" Height="30">
+                <ComboBox x:Name="DefType" Grid.Column="1" Background="#1a1d24" Foreground="White" Height="30" BorderThickness="0">
                     <ComboBoxItem x:Name="DefTypeSmoke" Content="Smoke" Tag="smoke"/><ComboBoxItem x:Name="DefTypeFlash" Content="Flash" Tag="flash"/>
                     <ComboBoxItem x:Name="DefTypeMolotov" Content="Molotov" Tag="molotov"/><ComboBoxItem x:Name="DefTypeHE" Content="HE" Tag="he"/>
                 </ComboBox>
@@ -18,7 +18,7 @@
             <Grid Margin="0,0,0,16">
                 <Grid.ColumnDefinitions><ColumnDefinition Width="140"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
                 <TextBlock x:Name="LblDefSide" Text="Default Side" Foreground="#999" VerticalAlignment="Center"/>
-                <ComboBox x:Name="DefSide" Grid.Column="1" Background="#1a1d24" Foreground="White" Height="30">
+                <ComboBox x:Name="DefSide" Grid.Column="1" Background="#1a1d24" Foreground="White" Height="30" BorderThickness="0">
                     <ComboBoxItem Content="T" Tag="T"/><ComboBoxItem Content="CT" Tag="CT"/><ComboBoxItem Content="T+CT" Tag="Both"/>
                 </ComboBox>
             </Grid>
@@ -26,7 +26,7 @@
             <Grid Margin="0,0,0,16">
                 <Grid.ColumnDefinitions><ColumnDefinition Width="140"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
                 <TextBlock x:Name="LblDefTrickType" Text="Def. Trick Type" Foreground="#999" VerticalAlignment="Center"/>
-                <ComboBox x:Name="DefTrickType" Grid.Column="1" Background="#1a1d24" Foreground="White" Height="30">
+                <ComboBox x:Name="DefTrickType" Grid.Column="1" Background="#1a1d24" Foreground="White" Height="30" BorderThickness="0">
                     <ComboBoxItem x:Name="DefTrickWallbang" Content="Wallbang" Tag="wallbang"/>
                     <ComboBoxItem x:Name="DefTrickBoost" Content="Boost" Tag="boost"/>
                     <ComboBoxItem x:Name="DefTrickJump" Content="Jump" Tag="jump"/>
@@ -37,19 +37,19 @@
             <TextBlock x:Name="ConflictHeader" Text="Conflict Distance Thresholds" FontSize="16" FontWeight="Bold" Foreground="#f5a623" Margin="0,12,0,8"/>
             <Grid Margin="0,0,0,8"><Grid.ColumnDefinitions><ColumnDefinition Width="180"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
                 <TextBlock x:Name="LblNadesT" Text="Nades Target (px)" Foreground="#999" VerticalAlignment="Center"/>
-                <TextBox x:Name="T_NadesTarget" Grid.Column="1" Background="#1a1d24" Foreground="White" Height="28"/></Grid>
+                <TextBox x:Name="T_NadesTarget" Grid.Column="1" Background="#1a1d24" Foreground="White" Height="28" BorderThickness="0" Padding="8,0"/></Grid>
             <Grid Margin="0,0,0,8"><Grid.ColumnDefinitions><ColumnDefinition Width="180"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
                 <TextBlock x:Name="LblNadesL" Text="Nades Lineup (px)" Foreground="#999" VerticalAlignment="Center"/>
-                <TextBox x:Name="T_NadesLineup" Grid.Column="1" Background="#1a1d24" Foreground="White" Height="28"/></Grid>
+                <TextBox x:Name="T_NadesLineup" Grid.Column="1" Background="#1a1d24" Foreground="White" Height="28" BorderThickness="0" Padding="8,0"/></Grid>
             <Grid Margin="0,0,0,8"><Grid.ColumnDefinitions><ColumnDefinition Width="180"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
                 <TextBlock x:Name="LblWbT" Text="Wallbang Target (px)" Foreground="#999" VerticalAlignment="Center"/>
-                <TextBox x:Name="T_WallbangTarget" Grid.Column="1" Background="#1a1d24" Foreground="White" Height="28"/></Grid>
+                <TextBox x:Name="T_WallbangTarget" Grid.Column="1" Background="#1a1d24" Foreground="White" Height="28" BorderThickness="0" Padding="8,0"/></Grid>
             <Grid Margin="0,0,0,8"><Grid.ColumnDefinitions><ColumnDefinition Width="180"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
                 <TextBlock x:Name="LblWbL" Text="Wallbang Lineup (px)" Foreground="#999" VerticalAlignment="Center"/>
-                <TextBox x:Name="T_WallbangLineup" Grid.Column="1" Background="#1a1d24" Foreground="White" Height="28"/></Grid>
+                <TextBox x:Name="T_WallbangLineup" Grid.Column="1" Background="#1a1d24" Foreground="White" Height="28" BorderThickness="0" Padding="8,0"/></Grid>
             <Grid Margin="0,0,0,16"><Grid.ColumnDefinitions><ColumnDefinition Width="180"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
                 <TextBlock x:Name="LblTrickT" Text="Tricks Target (px)" Foreground="#999" VerticalAlignment="Center"/>
-                <TextBox x:Name="T_TrickTarget" Grid.Column="1" Background="#1a1d24" Foreground="White" Height="28"/></Grid>
+                <TextBox x:Name="T_TrickTarget" Grid.Column="1" Background="#1a1d24" Foreground="White" Height="28" BorderThickness="0" Padding="8,0"/></Grid>
 
             <TextBlock x:Name="DisplayHeader" Text="Display" FontSize="16" FontWeight="Bold" Foreground="#f5a623" Margin="0,12,0,8"/>
             <Grid Margin="0,0,0,8"><Grid.ColumnDefinitions><ColumnDefinition Width="140"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
@@ -69,7 +69,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBox x:Name="DataPath" Background="#1a1d24" Foreground="White" Height="30"
+                <TextBox x:Name="DataPath" Background="#1a1d24" Foreground="White" Height="30" BorderThickness="0"
                          VerticalAlignment="Center" IsReadOnly="True"/>
                 <Button Grid.Column="1" Content="Browse..." Background="#2a2d34" Foreground="White"
                         BorderThickness="0" Height="30" Width="70" Cursor="Hand"

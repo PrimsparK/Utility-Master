@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Title="Trick Detail" Width="820" Height="920"
     WindowStartupLocation="CenterOwner" ResizeMode="CanResize"
-    Background="#1a1d24" Foreground="White">
+    Background="#0f1116" Foreground="White">
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="24">
             <TextBlock x:Name="TitleLabel" Text="Trick Detail" FontSize="22" FontWeight="Bold" Margin="0,0,0,8"/>

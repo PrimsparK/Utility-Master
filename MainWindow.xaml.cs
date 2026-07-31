@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Text.Json;
@@ -98,7 +98,7 @@ public partial class MainWindow : Window
     private (double Width, double Height, double Left, double Top) LoadWindowPosition()
     {
         try { if (File.Exists(PosFile)) return JsonSerializer.Deserialize<(double, double, double, double)>(File.ReadAllText(PosFile)); }
-        catch { }
+        catch (Exception ex) { System.Diagnostics.Debug.WriteLine(ex.Message); }
         return (0, 0, 0, 0);
     }
 
@@ -108,8 +108,8 @@ public partial class MainWindow : Window
         {
             var dir = System.IO.Path.GetDirectoryName(PosFile)!;
             if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
-            File.WriteAllText(PosFile, JsonSerializer.Serialize((Width, Height, Left, Top)));
+            double l = double.IsNaN(Left) ? 0 : Left; double t = double.IsNaN(Top) ? 0 : Top; File.WriteAllText(PosFile, JsonSerializer.Serialize((Width, Height, l, t)));
         }
-        catch { }
+        catch (Exception ex) { System.Diagnostics.Debug.WriteLine(ex.Message); }
     }
 }

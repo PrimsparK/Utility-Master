@@ -82,7 +82,7 @@ public partial class CreateTrickWindow : Window
         UpdateSideState();
     }
 
-    public void SetExistingValues(string name, string type, string side, double x, double y, string? videoUrl, string? notes)
+    public void SetExistingValues(string name, string type, string side, double x, double y, string? videoUrl, string? notes, string? imagesJson = null)
     {
         NameBox.Text = name;
         XBox.Text = x.ToString("F0");
@@ -96,7 +96,7 @@ public partial class CreateTrickWindow : Window
         Title = Loc.Get("edit");
         WinTitle.Text = Loc.Get("trick_edit.title");
         CreateBtn.Content = Loc.Get("add_lineup.save_btn");
-        try { var paths = JsonSerializer.Deserialize<List<string>>(name == "" ? "[]" : ""); if (paths != null && paths.Count > 0) { foreach (var p in paths) { if (File.Exists(p)) AddImage(p); } } } catch { }
+            try { var paths = JsonSerializer.Deserialize<List<string>>(imagesJson ?? "[]"); if (paths != null && paths.Count > 0) { foreach (var p in paths) { if (File.Exists(p)) AddImage(p); } } } catch { }
         UpdateSideState();
     }
 

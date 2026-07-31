@@ -227,11 +227,11 @@
 
         <!-- Collapsible right panel toggle button -->
         <Border Grid.Column="1" Background="Transparent" VerticalAlignment="Top" HorizontalAlignment="Right"
-                x:Name="SideToggleBtn" Cursor="Hand" Margin="0,12,0,0"
+                x:Name="SideToggleBtn" Cursor="Hand" Margin="0,12,0,0" ToolTip="Show search panel"
                 MouseLeftButtonDown="ToggleSidePanel_Click">
-            <Border Background="#cc1a1d24" CornerRadius="8,0,0,8" Padding="6,12"
+            <Border Background="#cc1a1d24" CornerRadius="8,0,0,8" Padding="8,14"
                     BorderBrush="#33ffffff" BorderThickness="1,1,0,1">
-                <TextBlock Text="◀" Foreground="#888" FontSize="12"/>
+                <TextBlock Text="🔍" Foreground="#ccc" FontSize="14"/>
             </Border>
         </Border>
 
@@ -243,17 +243,20 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="36"/>
                     <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Button Grid.Row="0" Content="▶" Width="24" Height="24" Background="Transparent" Foreground="#888"
                     BorderThickness="0" FontSize="12" HorizontalAlignment="Right" Click="ToggleSidePanel_Click"
-                    ToolTip="Collapse panel"/>
+                    ToolTip="Collapse panel" ToolTipService.ShowOnDisabled="True"/>
                 <TextBox x:Name="SearchBox" Grid.Row="1"
                     Background="#0f1116" Foreground="White" BorderThickness="0"
-                    FontSize="13" Margin="0,0,0,8"
+                    FontSize="13" Margin="0,0,0,8" Padding="8,0"
                     TextChanged="SearchBox_TextChanged"/>
                 <ListBox x:Name="TargetList" Grid.Row="2"
                     Background="Transparent" BorderThickness="0"
                     Foreground="#ccc" FontSize="12"/>
+                <TextBlock Grid.Row="3" Text="Double-click to locate" Foreground="#555" FontSize="10"
+                    HorizontalAlignment="Center" Margin="0,4,0,0"/>
             </Grid>
         </Border>
     </Grid>
