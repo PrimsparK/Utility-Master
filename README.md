@@ -32,6 +32,25 @@ MIT License - Open Source
 3. CS2 related trademarks are property of Valve Corporation.
 4. For educational and exchange purposes only.
 
+## Source Build
+
+This repository only contains original source code and assets, with no compiled artifacts. Build it yourself after downloading:
+
+```powershell
+dotnet restore
+dotnet build -c Release
+```
+
+Run `bin\Release\net8.0-windows\UtilityMaster.exe` after the build, or use:
+
+```powershell
+dotnet run --project UtilityMaster.csproj
+```
+
+## Release Builds
+
+Packaged application binaries are not committed to the source repository. They are distributed separately in Releases. A release archive only contains the runnable application, its runtime dependencies, and required assets, without source code, build intermediates, or developer tooling files.
+
 ## Future Updates
 1. Update the default nades/tricks for most of maps. 
 2. More functions?

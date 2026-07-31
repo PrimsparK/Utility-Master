@@ -1,6 +1,11 @@
 ﻿# Build outputs
 bin/
 obj/
+*.exe
+*.dll
+*.pdb
+*.deps.json
+*.runtimeconfig.json
 *.user
 *.suo
 *.userosscache
@@ -32,7 +37,16 @@ Desktop.ini
 # Release archives
 release/
 
+# AI/domain memory docs (kept locally, not committed)
+/CONTEXT.md
+/docs/
+
 # Temp
 *.tmp
 *.orig
 src_backup_extract/
+
+# One-off local helper scripts
+fix_loc*.py
+__pycache__/
+*.pyc

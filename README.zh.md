@@ -32,6 +32,25 @@ MIT 许可证 - 开源
 3. CS2 相关商标归 Valve Corporation 所有。
 4. 仅供学习交流使用。
 
+## 源码版本
+
+此仓库只保留原始源码和资源，不包含任何编译产物。下载源码后需要自行编译：
+
+```powershell
+dotnet restore
+dotnet build -c Release
+```
+
+编译完成后可以运行 `bin\Release\net8.0-windows\UtilityMaster.exe`，也可以直接使用：
+
+```powershell
+dotnet run --project UtilityMaster.csproj
+```
+
+## Release 版本
+
+已打包好的软件本体不会提交到源码仓库，而是单独放在 Release 中分发。Release 压缩包只包含可运行程序、运行依赖和资源文件，不包含源码、编译中间文件或开发工具文件。
+
 ## 未来更新
 1. 更新大多数地图的默认道具/技巧
 2. 更多功能？
