@@ -25,13 +25,13 @@ namespace UtilityMaster.Services;
      private static string ConfigJsonPath => Path.Combine(
          AppDomain.CurrentDomain.BaseDirectory, "Assets", "default_config.json");
 
-     public static AppDbContext CreateContext()
+     public static AppDbContext CreateContext(string? basePath = null)
      {
-         var dir = Path.GetDirectoryName(DbPath)!;
+         var dir = string.IsNullOrWhiteSpace(basePath) ? Path.GetDirectoryName(DbPath)! : basePath;
          Directory.CreateDirectory(dir);
 
          var options = new DbContextOptionsBuilder<AppDbContext>()
-             .UseSqlite($"Data Source={DbPath}")
+             .UseSqlite($"Data Source={Path.Combine(dir, "data.db")}")
              .Options;
          var ctx = new AppDbContext(options);
          ctx.Database.EnsureCreated();

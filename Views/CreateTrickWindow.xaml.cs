@@ -132,7 +132,7 @@ public partial class CreateTrickWindow : Window
             }
             AddImage(savePath);
         }
-        catch (Exception ex) { MessageBox.Show("Paste failed: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
+        catch (Exception ex) { MessageBox.Show(Loc.Get("add_lineup.paste_failed") + " " + ex.Message, Loc.Get("error"), MessageBoxButton.OK, MessageBoxImage.Error); }
     }
 
     private void AddImage(string path)
@@ -151,7 +151,7 @@ public partial class CreateTrickWindow : Window
         };
         panel.MouseRightButtonDown += (s, e) =>
         {
-            if (MessageBox.Show("Remove this image?", "Remove", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            if (MessageBox.Show(Loc.Get("add_lineup.remove_image"), Loc.Get("add_lineup.remove_title"), MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 _imagePaths.Remove(path); ImageList.Items.Remove(panel);
             }
@@ -169,8 +169,12 @@ public partial class CreateTrickWindow : Window
         var type = (TypeBox.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? "wallbang";
         var sideTag = (SideBox.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? "Both";
         var isBoostCamp = type is "boost" or "camp";
-        double.TryParse(XBox.Text, out var px);
-        double.TryParse(YBox.Text, out var py);
+        if (!double.TryParse(XBox.Text, out var px) || !double.TryParse(YBox.Text, out var py))
+        {
+            ErrorLabel.Text = Loc.Get("create_trick.error_coord");
+            ErrorLabel.Visibility = Visibility.Visible;
+            return;
+        }
         _onCreate(new TrickEntity
         {
             Name = name, Type = type,

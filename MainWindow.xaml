@@ -36,13 +36,13 @@
                         HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </Border>
                 <Rectangle Height="1" Width="24" Fill="#2a2d34" Margin="0,8"/>
-                <Border Style="{StaticResource NavBtn}"
+                <Border x:Name="SettingsNav" Style="{StaticResource NavBtn}"
                     MouseLeftButtonDown="SettingsNav_Click"
                     ToolTip="Settings">
                     <TextBlock Text="⚙" FontSize="18" Foreground="#666"
                         HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </Border>
-                <Border Style="{StaticResource NavBtn}"
+                <Border x:Name="AboutNav" Style="{StaticResource NavBtn}"
                     MouseLeftButtonDown="AboutNav_Click"
                     ToolTip="About">
                     <TextBlock Text="ⓘ" FontSize="18" Foreground="#666"

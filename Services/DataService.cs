@@ -15,6 +15,16 @@ public class DataService : IDataService
         _db = DatabaseService.CreateContext();
     }
 
+    public DataService(AppDbContext db)
+    {
+        _db = db;
+    }
+
+    public DataService(string basePath)
+    {
+        _db = DatabaseService.CreateContext(basePath);
+    }
+
     public void Dispose()
     {
         if (!_disposed)
@@ -146,7 +156,14 @@ public class DataService : IDataService
     public void DeleteLineup(Guid id)
     {
         var l = _db.Lineups.Find(id);
-        if (l != null) { _db.Lineups.Remove(l); _db.SaveChanges(); }
+        if (l == null) return;
+        var targetId = l.TargetId;
+        _db.Lineups.Remove(l);
+        _db.SaveChanges();
+
+        var remaining = _db.Lineups.Where(x => x.TargetId == targetId).OrderBy(x => x.Sequence).ToList();
+        for (int i = 0; i < remaining.Count; i++) remaining[i].Sequence = i + 1;
+        _db.SaveChanges();
     }
 
     // Lineups (tracked)

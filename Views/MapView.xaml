@@ -55,7 +55,7 @@
                                                 <TextBlock x:Name="ToggleText"
                                                     Text="{Binding SelectedItem.Content, RelativeSource={RelativeSource AncestorType=ComboBox}}"
                                                     FontSize="13" FontWeight="Bold" Foreground="White" VerticalAlignment="Center"/>
-                                                <TextBlock Text=" ▼" FontSize="9" Foreground="#888" VerticalAlignment="Center" Margin="4,0,0,0"/>
+                                                <TextBlock Text="&#x25BE;" FontSize="9" Foreground="#888" VerticalAlignment="Center" Margin="4,0,0,0"/>
                                             </StackPanel>
                                         </ControlTemplate>
                                     </ToggleButton.Template>
@@ -74,6 +74,15 @@
                     </ComboBox>
 
                     <Rectangle Width="1" Height="20" Fill="#3a3d44" Margin="0,0,10,0" VerticalAlignment="Center"/>
+
+                    <Border x:Name="TargetBrowsePill" CornerRadius="10" Padding="11,7" Margin="0,0,3,0" Cursor="Hand"
+                        MouseLeftButtonDown="NadesBrowseMode_Click" Tag="targets" Background="#f5a623">
+                        <TextBlock x:Name="TargetBrowseText" Text="Targets" Foreground="#0f1116" FontSize="12" FontWeight="Bold" VerticalAlignment="Center"/>
+                    </Border>
+                    <Border x:Name="LineupBrowsePill" CornerRadius="10" Padding="11,7" Margin="0,0,8,0" Cursor="Hand"
+                        MouseLeftButtonDown="NadesBrowseMode_Click" Tag="lineups" Background="#1a1d24">
+                        <TextBlock x:Name="LineupBrowseText" Text="Lineups" Foreground="#888" FontSize="12" FontWeight="Bold" VerticalAlignment="Center"/>
+                    </Border>
 
                     <Border x:Name="SmokePill" CornerRadius="10" Padding="14,10" Margin="0,0,3,0" Cursor="Hand"
                         MouseLeftButtonDown="Filter_Click" Tag="smoke" Background="#1a1d24">
@@ -226,37 +235,106 @@
         </Grid>
 
         <!-- Collapsible right panel toggle button -->
-        <Border Grid.Column="1" Background="Transparent" VerticalAlignment="Top" HorizontalAlignment="Right"
+        <Border Grid.Column="1" Width="40" Height="40" Background="Transparent" VerticalAlignment="Top" HorizontalAlignment="Right"
                 x:Name="SideToggleBtn" Cursor="Hand" Margin="0,12,0,0" ToolTip="Show search panel"
                 MouseLeftButtonDown="ToggleSidePanel_Click">
-            <Border Background="#cc1a1d24" CornerRadius="8,0,0,8" Padding="8,14"
+            <Border Background="#cc1a1d24" CornerRadius="8,0,0,8"
                     BorderBrush="#33ffffff" BorderThickness="1,1,0,1">
-                <TextBlock Text="🔍" Foreground="#ccc" FontSize="14"/>
+                <Path Data="M 10,10 m -4,0 a 4,4 0 1,0 8,0 a 4,4 0 1,0 -8,0 M 13,13 L 17,17"
+                      Stroke="#ccc" StrokeThickness="1.5" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                      Width="18" Height="18" Stretch="Uniform"
+                      HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </Border>
         </Border>
 
         <!-- Collapsible right panel -->
         <Border Grid.Column="1" Background="#1a1d24" BorderBrush="#2a2d34" BorderThickness="1,0,0,0"
-                Width="260" x:Name="SidePanel" Visibility="Collapsed">
-            <Grid Margin="12">
+                Width="300" x:Name="SidePanel" Visibility="Collapsed">
+            <Grid Margin="14">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="36"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <Button Grid.Row="0" Content="▶" Width="24" Height="24" Background="Transparent" Foreground="#888"
-                    BorderThickness="0" FontSize="12" HorizontalAlignment="Right" Click="ToggleSidePanel_Click"
-                    ToolTip="Collapse panel" ToolTipService.ShowOnDisabled="True"/>
-                <TextBox x:Name="SearchBox" Grid.Row="1"
-                    Background="#0f1116" Foreground="White" BorderThickness="0"
-                    FontSize="13" Margin="0,0,0,8" Padding="8,0"
-                    TextChanged="SearchBox_TextChanged"/>
-                <ListBox x:Name="TargetList" Grid.Row="2"
+
+                <Grid Grid.Row="0" Margin="0,0,0,12">
+                    <TextBlock x:Name="SearchTitleLabel" Text="Search" FontSize="15" FontWeight="Bold"
+                               Foreground="White" VerticalAlignment="Center"/>
+                    <Button x:Name="SideCollapseBtn" Content="&#x2715;" Width="26" Height="26"
+                            Background="Transparent" Foreground="#777" BorderThickness="0" FontSize="12"
+                            HorizontalAlignment="Right" Click="ToggleSidePanel_Click"
+                            ToolTip="Collapse panel" ToolTipService.ShowOnDisabled="True"/>
+                </Grid>
+
+                <Border Grid.Row="1" Background="#0f1116" CornerRadius="8" BorderBrush="#2a2d34"
+                        BorderThickness="1" Height="36" Margin="0,0,0,8">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="30"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="30"/>
+                        </Grid.ColumnDefinitions>
+                        <Path Data="M 10,10 m -4,0 a 4,4 0 1,0 8,0 a 4,4 0 1,0 -8,0 M 13,13 L 17,17"
+                              Stroke="#666" StrokeThickness="1.5" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                              Width="18" Height="18" Stretch="Uniform"
+                              HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <TextBox x:Name="SearchBox" Grid.Column="1"
+                            Background="Transparent" Foreground="White" BorderThickness="0"
+                            FontSize="13" VerticalAlignment="Center" Padding="0"
+                            TextChanged="SearchBox_TextChanged"/>
+                        <Button x:Name="ClearSearchBtn" Grid.Column="2" Content="&#x2715;"
+                                Width="24" Height="24" Background="Transparent" Foreground="#888"
+                                BorderThickness="0" FontSize="11" Visibility="Collapsed"
+                                HorizontalAlignment="Center" VerticalAlignment="Center"
+                                Click="ClearSearch_Click" ToolTip="Clear"/>
+                    </Grid>
+                </Border>
+
+                <Grid Grid.Row="2" Margin="0,0,0,8">
+                    <TextBlock x:Name="SearchResultCount" Text="" Foreground="#777" FontSize="11"
+                               VerticalAlignment="Center"/>
+                    <TextBlock x:Name="SearchEmptyText" Text="No matches" Foreground="#666" FontSize="12"
+                               HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed"/>
+                </Grid>
+
+                <ListBox x:Name="TargetList" Grid.Row="3"
                     Background="Transparent" BorderThickness="0"
-                    Foreground="#ccc" FontSize="12"/>
-                <TextBlock Grid.Row="3" Text="Double-click to locate" Foreground="#555" FontSize="10"
-                    HorizontalAlignment="Center" Margin="0,4,0,0"/>
+                    Foreground="#ccc" FontSize="12"
+                    ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Padding" Value="0"/>
+                            <Setter Property="Margin" Value="0,0,0,6"/>
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListBoxItem">
+                                        <Border x:Name="ItemBorder" Background="#14161c" CornerRadius="8"
+                                                BorderBrush="#2a2d34" BorderThickness="1" Padding="10,8"
+                                                Cursor="Hand">
+                                            <ContentPresenter/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="ItemBorder" Property="Background" Value="#1d212a"/>
+                                                <Setter TargetName="ItemBorder" Property="BorderBrush" Value="#f5a623"/>
+                                            </Trigger>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter TargetName="ItemBorder" Property="BorderBrush" Value="#f5a623"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                </ListBox>
+
+                <TextBlock Grid.Row="4" x:Name="SearchHintText" Text="Double-click to locate"
+                           Foreground="#555" FontSize="10" HorizontalAlignment="Center" Margin="0,8,0,0"/>
             </Grid>
         </Border>
     </Grid>

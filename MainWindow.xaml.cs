@@ -17,9 +17,19 @@ public partial class MainWindow : Window
         InitializeComponent();
         ContentFrame.NavigationUIVisibility = NavigationUIVisibility.Hidden;
         Title = Loc.Get("window.title");
+        RefreshLocalization();
         Loaded += OnLoaded;
         Closing += OnClosing;
         KeyDown += OnKeyDown;
+    }
+
+    public void RefreshLocalization()
+    {
+        Title = Loc.Get("window.title");
+        NNav.ToolTip = Loc.Get("nades") + " (Ctrl+N)";
+        TNav.ToolTip = Loc.Get("tricks");
+        SettingsNav.ToolTip = Loc.Get("settings.nav");
+        AboutNav.ToolTip = Loc.Get("about");
     }
 
     private void OnLoaded(object sender, RoutedEventArgs e)
@@ -64,7 +74,11 @@ public partial class MainWindow : Window
     {
         if (Keyboard.Modifiers == ModifierKeys.Control && e.Key == Key.N)
         {
-            if (ContentFrame.Content is Views.MapView mv) mv.OpenCreateTargetAt(0, 0);
+            if (ContentFrame.Content is Views.MapView mv)
+            {
+                if (mv.Mode == "tricks") mv.OpenCreateTrickSpotAt(0, 0);
+                else mv.OpenCreateTargetAt(0, 0);
+            }
         }
     }
 
@@ -97,7 +111,14 @@ public partial class MainWindow : Window
 
     private (double Width, double Height, double Left, double Top) LoadWindowPosition()
     {
-        try { if (File.Exists(PosFile)) return JsonSerializer.Deserialize<(double, double, double, double)>(File.ReadAllText(PosFile)); }
+        try
+        {
+            if (File.Exists(PosFile))
+            {
+                var values = JsonSerializer.Deserialize<double[]>(File.ReadAllText(PosFile));
+                if (values is { Length: 4 }) return (values[0], values[1], values[2], values[3]);
+            }
+        }
         catch (Exception ex) { System.Diagnostics.Debug.WriteLine(ex.Message); }
         return (0, 0, 0, 0);
     }

@@ -73,7 +73,7 @@ public partial class SettingsPage : Page
         DefTrickCamp.Content = Loc.Get("camp");
 
         StatusText.Text = "";
-        if (Window.GetWindow(this) is MainWindow mw) mw.Title = Loc.Get("window.title");
+        if (Window.GetWindow(this) is MainWindow mw) mw.RefreshLocalization();
     }
 
     private void BrowseDataPath_Click(object sender, RoutedEventArgs e)
@@ -110,7 +110,7 @@ public partial class SettingsPage : Page
         };
         SettingsService.Save(s);
         Loc.SetLanguage(lang);
-        if (Window.GetWindow(this) is MainWindow mw) mw.Title = Loc.Get("window.title");
+        if (Window.GetWindow(this) is MainWindow mw) mw.RefreshLocalization();
         StatusText.Text = Loc.Get("settings.saved") + " (restart required for data path change)";
         ApplyLocalization();
     }

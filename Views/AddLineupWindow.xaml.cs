@@ -104,12 +104,8 @@ public partial class AddLineupWindow : Window
         PickPosBtn.Content = Loc.Get("add_lineup.pick_btn");
         AddBtn.Content = Loc.Get("add_lineup.btn");
         CbStanding.Content = Loc.Get("standing");
-        CbCrouching.Content = Loc.Get("crouching");
         CbJumpThrow.Content = Loc.Get("jump_throw");
         CbRunning.Content = Loc.Get("running");
-        CbRunThrow.Content = Loc.Get("run_throw");
-        CbRunJumpThrow.Content = Loc.Get("run_jump_throw");
-        CbCrouchJump.Content = Loc.Get("crouch_jump_throw");
         ProCheck.Content = Loc.Get("add_lineup.pro");
     }
 
@@ -256,6 +252,12 @@ public partial class AddLineupWindow : Window
 
     private void AddBtn_Click(object sender, RoutedEventArgs e)
     {
+        if (string.IsNullOrWhiteSpace(LineupName.Text))
+        {
+            ErrorText.Text = Loc.Get("add_lineup.error_name");
+            ErrorText.Visibility = Visibility.Visible;
+            return;
+        }
         if (!double.TryParse(LineupX.Text, out var px) || !double.TryParse(LineupY.Text, out var py))
         { ErrorText.Text = Loc.Get("add_lineup.error_coord"); ErrorText.Visibility = Visibility.Visible; return; }
         X = px; Y = py;

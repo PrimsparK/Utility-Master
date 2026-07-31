@@ -43,7 +43,7 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel>
-                        <TextBlock x:Name="L_Name" Text="Lineup Name" Foreground="#999" FontSize="12" Margin="0,0,0,4"/>
+                        <TextBlock x:Name="L_Name" Text="Utility Name" Foreground="#999" FontSize="12" Margin="0,0,0,4"/>
             <Border Background="#0f1116" CornerRadius="6" Height="34" Margin="0,0,0,10">
                 <TextBox x:Name="LineupName" Background="Transparent" Foreground="White" BorderThickness="0" VerticalAlignment="Center" FontSize="13" Padding="10,0"/>
             </Border>
@@ -90,13 +90,9 @@
                 <Border Background="#0f1116" CornerRadius="6" Height="34" Margin="0,0,0,10">
                     <ComboBox x:Name="ThrowType" Background="Transparent" Foreground="White" BorderThickness="0"
                               VerticalAlignment="Center" FontSize="13" Padding="6,0">
-                    <ComboBoxItem x:Name="CbStanding" Content="Standing" Tag="standing" IsSelected="True"/>
-                    <ComboBoxItem x:Name="CbCrouching" Content="Crouching" Tag="crouching"/>
-                    <ComboBoxItem x:Name="CbRunning" Content="Running" Tag="running"/>
                     <ComboBoxItem x:Name="CbJumpThrow" Content="Jump-throw" Tag="jump-throw"/>
-                    <ComboBoxItem x:Name="CbRunThrow" Content="Run-throw" Tag="run-throw"/>
-                    <ComboBoxItem x:Name="CbRunJumpThrow" Content="Run Jump-throw" Tag="run-jump-throw"/>
-                    <ComboBoxItem x:Name="CbCrouchJump" Content="Crouch Jump-throw" Tag="crouch-jump-throw"/>
+                    <ComboBoxItem x:Name="CbStanding" Content="Standing" Tag="standing" IsSelected="True"/>
+                    <ComboBoxItem x:Name="CbRunning" Content="Running" Tag="running"/>
                     </ComboBox>
                 </Border>
 

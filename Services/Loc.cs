@@ -31,7 +31,7 @@ public static class Loc
             ["about.disclaimer2"] = "This is a community-made unofficial tool. No affiliation, association, sponsorship, or endorsement by Valve Corporation.",
             ["about.disclaimer3"] = "CS2 related trademarks are property of Valve Corporation.",
             ["about.disclaimer4"] = "For educational and exchange purposes only.",
-            ["about.version"] = "v1.0.0",
+            ["about.version"] = "v1.5.0",
 
 
             // Settings
@@ -75,6 +75,22 @@ public static class Loc
             ["map.min_lineup"] = "Target must have at least one lineup.",
             ["map.cannot_delete"] = "Cannot Delete",
             ["map.search"] = "Search...",
+            ["map.search_title"] = "Search",
+            ["map.search_placeholder"] = "Search spots...",
+            ["map.search_no_results"] = "No matches",
+            ["map.search_count"] = "{0} results",
+            ["map.search_hint"] = "Double-click to locate",
+            ["map.search_show"] = "Show search panel",
+            ["map.search_collapse"] = "Collapse panel",
+            ["map.search_clear"] = "Clear",
+            ["map.delete_lineup_confirm"] = "Delete lineup #{0}?",
+            ["map.delete_lineup_title"] = "Delete Lineup",
+            ["map.delete_last_lineup_confirm"] = "This is the only lineup. Delete the whole target '{0}'?",
+            ["map.lineup_variant_title"] = "Lineup Variant",
+            ["map.overwrite_lineup"] = "Lineup #{0} is already at this position. Overwrite it and remove this one?",
+            ["map.new_variant"] = "A lineup (#{0}) already exists at this position. Create as a new variant (same position, different setup)?",
+            ["map.browse_targets"] = "Targets",
+            ["map.browse_lineups"] = "Lineups",
 
             // Lineup detail
             ["lineup.title"] = "Lineup Detail",
@@ -91,7 +107,6 @@ public static class Loc
             // Create Target
             ["create_target.title"] = "Create Target",
             ["create_target.title_trick"] = "Create Spot",
-            ["create_target.name"] = "Target Name",
             ["create_target.type"] = "Type",
             ["create_target.side"] = "Side",
             ["create_target.x"] = "Target X (pixel)",
@@ -103,7 +118,7 @@ public static class Loc
 
             // Add/Edit Lineup
             ["add_lineup.title"] = "Add Lineup",
-            ["add_lineup.name"] = "Lineup Name",
+            ["add_lineup.name"] = "Utility Name",
             ["add_lineup.side"] = "Side",
             ["add_lineup.edit_title"] = "Edit Lineup",
             ["add_lineup.pick_hint"] = "Click on map to set position:",
@@ -120,6 +135,7 @@ public static class Loc
             ["add_lineup.paste_btn"] = "Paste Image (Ctrl+V)",
             ["add_lineup.paste_failed"] = "Paste failed:",
             ["add_lineup.error_coord"] = "Invalid coordinates.",
+            ["add_lineup.error_name"] = "Utility name is required.",
             ["add_lineup.remove_image"] = "Remove this image?",
             ["add_lineup.remove_title"] = "Remove",
 
@@ -226,7 +242,7 @@ public static class Loc
             ["about.disclaimer2"] = "本工具为社区制作的非官方工具，与 Valve Corporation 无任何关联、合作、赞助或背书关系。",
             ["about.disclaimer3"] = "CS2 相关商标归 Valve Corporation 所有。",
             ["about.disclaimer4"] = "仅供学习交流使用。",
-            ["about.version"] = "v1.0.0",
+            ["about.version"] = "v1.5.0",
 
             // Settings
             ["settings.title"] = "设置",
@@ -269,6 +285,22 @@ public static class Loc
             ["map.min_lineup"] = "落点至少需要保留一个站点。",
             ["map.cannot_delete"] = "无法删除",
             ["map.search"] = "搜索...",
+            ["map.search_title"] = "搜索",
+            ["map.search_placeholder"] = "搜索点位...",
+            ["map.search_no_results"] = "没有匹配结果",
+            ["map.search_count"] = "{0} 个结果",
+            ["map.search_hint"] = "双击定位",
+            ["map.search_show"] = "显示搜索面板",
+            ["map.search_collapse"] = "收起面板",
+            ["map.search_clear"] = "清空",
+            ["map.delete_lineup_confirm"] = "删除站位 #{0}？",
+            ["map.delete_lineup_title"] = "删除站位",
+            ["map.delete_last_lineup_confirm"] = "这是最后一个站位。是否删除整个落点 '{0}'？",
+            ["map.lineup_variant_title"] = "站位变体",
+            ["map.overwrite_lineup"] = "站位 #{0} 已在此位置。覆盖它并移除当前站位？",
+            ["map.new_variant"] = "站位 (#{0}) 已在此位置。是否创建为新变体（同位置不同设置）？",
+            ["map.browse_targets"] = "落点",
+            ["map.browse_lineups"] = "点位",
 
             // Lineup detail
             ["lineup.title"] = "站点详情",
@@ -284,7 +316,6 @@ public static class Loc
             // Create Target
             ["create_target.title"] = "创建落点",
             ["create_target.title_trick"] = "创建点位",
-            ["create_target.name"] = "落点名称",
             ["create_target.type"] = "道具类型",
             ["create_target.side"] = "阵营",
             ["create_target.x"] = "落点 X (像素)",
@@ -296,7 +327,7 @@ public static class Loc
 
             // Add/Edit Lineup
             ["add_lineup.title"] = "添加站点",
-            ["add_lineup.name"] = "站点名称",
+            ["add_lineup.name"] = "道具名称",
             ["add_lineup.side"] = "阵营",
             ["add_lineup.edit_title"] = "编辑站点",
             ["add_lineup.pick_hint"] = "点击小地图选择位置：",
@@ -313,6 +344,7 @@ public static class Loc
             ["add_lineup.paste_btn"] = "粘贴图片 (Ctrl+V)",
             ["add_lineup.paste_failed"] = "粘贴失败:",
             ["add_lineup.error_coord"] = "坐标无效。",
+            ["add_lineup.error_name"] = "道具名称不能为空。",
             ["add_lineup.remove_image"] = "移除此图片？",
             ["add_lineup.remove_title"] = "移除",
 

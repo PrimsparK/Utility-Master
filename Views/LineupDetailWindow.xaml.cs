@@ -21,31 +21,19 @@ public partial class LineupDetailWindow : Window
 
     private List<LineupEntity> _siblings = new();
     private int _currentSiblingIndex = -1;
+    private TargetEntity? _target;
 
     public LineupDetailWindow(LineupEntity lineup, TargetEntity? target = null, List<LineupEntity>? siblings = null)
     {
         InitializeComponent();
         _siblings = siblings ?? new List<LineupEntity>();
         if (_siblings.Count <= 1) _siblings = new List<LineupEntity>();
+        _target = target;
 
-        var lineupSide = lineup.Side ?? target?.Side ?? "T";
-        var type = target?.Type ?? "?";
-        var lineupName = !string.IsNullOrWhiteSpace(lineup.Name) ? lineup.Name : (target?.Name ?? "?");
-
-        var typeText = type switch
-        {
-            "smoke" => Loc.Get("smoke"),
-            "flash" => Loc.Get("flash"),
-            "he" => Loc.Get("he"),
-            "molotov" => lineupSide == "CT" ? "Incendiary" : "Molotov",
-            _ => type
-        };
+        ApplyIdentity(lineup);
 
         Title = Loc.Get("lineup.title") + " - #" + lineup.Sequence;
         TitleLabel.Text = Loc.Get("lineup.title") + " #" + lineup.Sequence;
-        SideInfoText.Text = lineupSide + " " + typeText;
-        TargetTitle.Text = Loc.Get("lineup.target_label").Replace("{0}", lineupName);
-        TargetNameText.Text = lineupName;
         CoordText.Text = "(" + lineup.X.ToString("F0") + ", " + lineup.Y.ToString("F0") + ")";
 
         AimDescTitle.Text = Loc.Get("lineup.aim");
@@ -209,6 +197,7 @@ public partial class LineupDetailWindow : Window
 
     private void RefreshContent(LineupEntity lineup)
     {
+        ApplyIdentity(lineup);
         Title = Loc.Get("lineup.title") + " - #" + lineup.Sequence;
         TitleLabel.Text = Loc.Get("lineup.title") + " #" + lineup.Sequence;
         CoordText.Text = "(" + lineup.X.ToString("F0") + ", " + lineup.Y.ToString("F0") + ")";
@@ -232,6 +221,25 @@ public partial class LineupDetailWindow : Window
         {
             VideoSection.Visibility = Visibility.Collapsed;
         }
+    }
+
+    private void ApplyIdentity(LineupEntity lineup)
+    {
+        var lineupSide = lineup.Side ?? _target?.Side ?? "T";
+        var type = _target?.Type ?? "?";
+        var lineupName = !string.IsNullOrWhiteSpace(lineup.Name) ? lineup.Name : (_target?.Name ?? "?");
+        var typeText = type switch
+        {
+            "smoke" => Loc.Get("smoke"),
+            "flash" => Loc.Get("flash"),
+            "he" => Loc.Get("he"),
+            "molotov" => lineupSide == "CT" ? Loc.Get("incendiary") : Loc.Get("molotov"),
+            _ => type
+        };
+
+        SideInfoText.Text = lineupSide + " " + typeText;
+        TargetTitle.Text = Loc.Get("lineup.target_label").Replace("{0}", lineupName);
+        TargetNameText.Text = lineupName;
     }
 
 

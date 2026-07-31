@@ -47,6 +47,15 @@ Run `bin\Release\net8.0-windows\UtilityMaster.exe` after the build, or use:
 dotnet run --project UtilityMaster.csproj
 ```
 
+## Tests
+
+```powershell
+dotnet test UtilityMaster.Tests\UtilityMaster.Tests.csproj -c Debug
+```
+
+The test project is only for local verification. It is not part of the app
+publish output and never ships inside the application.
+
 ## Release Builds
 
 Packaged application binaries are not committed to the source repository. They are distributed separately in Releases. A release archive only contains the runnable application, its runtime dependencies, and required assets, without source code, build intermediates, or developer tooling files.
@@ -58,4 +67,4 @@ Release archives keep only English, Simplified Chinese, and Traditional Chinese 
 
 ---
 
-v1.0.0
+v1.5.0

@@ -4,20 +4,26 @@
     <TargetFramework>net8.0-windows</TargetFramework>
     <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
     <UseWPF>true</UseWPF>
-    <Version>1.0.0</Version>
-    <AssemblyVersion>1.0.0</AssemblyVersion>
-    <FileVersion>1.0.0</FileVersion>
+    <Version>1.5.0</Version>
+    <AssemblyVersion>1.5.0</AssemblyVersion>
+    <FileVersion>1.5.0</FileVersion>
     <ApplicationIcon>Assets\logo.ico</ApplicationIcon>
     <Nullable>enable</Nullable>
      <ImplicitUsings>enable</ImplicitUsings>
      <ApplicationManifest>app.manifest</ApplicationManifest>
      <Platforms>x64</Platforms>
      <SatelliteResourceLanguages>en;zh-Hans;zh-Hant</SatelliteResourceLanguages>
+     <DefaultItemExcludes>$(DefaultItemExcludes);UtilityMaster.Tests\**</DefaultItemExcludes>
    </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.10" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10" />
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4078.44" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="UtilityMaster.Tests\**\*.cs" />
+    <None Remove="UtilityMaster.Tests\**" />
+    <Content Remove="UtilityMaster.Tests\**" />
+    <EmbeddedResource Remove="UtilityMaster.Tests\**" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Maps\*.png">

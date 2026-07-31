@@ -22,25 +22,27 @@ public class SettingsData
 
 public static class SettingsService
 {
-    private static string FilePath => Path.Combine(
+    private static string DefaultFilePath => Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
         "UtilityMaster", "settings.json");
 
-    public static SettingsData Load()
+    public static SettingsData Load(string? filePath = null)
     {
         try
         {
-            if (File.Exists(FilePath))
-                return JsonSerializer.Deserialize<SettingsData>(File.ReadAllText(FilePath)) ?? new();
+            var path = filePath ?? DefaultFilePath;
+            if (File.Exists(path))
+                return JsonSerializer.Deserialize<SettingsData>(File.ReadAllText(path)) ?? new();
         }
         catch (Exception ex) { System.Diagnostics.Debug.WriteLine(ex.Message); }
         return new SettingsData();
     }
 
-    public static void Save(SettingsData data)
+    public static void Save(SettingsData data, string? filePath = null)
     {
-        Directory.CreateDirectory(Path.GetDirectoryName(FilePath)!);
-        File.WriteAllText(FilePath, JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true }));
+        var path = filePath ?? DefaultFilePath;
+        Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+        File.WriteAllText(path, JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true }));
     }
 }
 

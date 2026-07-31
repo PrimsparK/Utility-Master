@@ -34,6 +34,11 @@ Desktop.ini
 *.db-shm
 *.db-wal
 
+# Test results
+TestResults/
+TestResults*/
+*.trx
+
 # Release archives
 release/
 

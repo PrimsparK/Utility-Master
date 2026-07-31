@@ -47,6 +47,14 @@ dotnet build -c Release
 dotnet run --project UtilityMaster.csproj
 ```
 
+## 测试
+
+```powershell
+dotnet test UtilityMaster.Tests\UtilityMaster.Tests.csproj -c Debug
+```
+
+测试工程只用于本地验证，不参与软件发布，发布产物中不会包含测试文件。
+
 ## Release 版本
 
 已打包好的软件本体不会提交到源码仓库，而是单独放在 Release 中分发。Release 压缩包只包含可运行程序、运行依赖和资源文件，不包含源码、编译中间文件或开发工具文件。
@@ -58,4 +66,4 @@ Release 压缩包只保留英文、简体中文和繁体中文语言资源，其
 
 ---
 
-v1.0.0
+v1.5.0

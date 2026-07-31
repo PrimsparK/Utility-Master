@@ -27,18 +27,19 @@
              e.HasKey(l => l.Id);
          });
 
-         modelBuilder.Entity<TrickEntity>(e =>
-         {
-             e.HasKey(t => t.Id);
-             e.HasOne(t => t.Profile).WithMany(p => p.Tricks).HasForeignKey(t => t.ProfileId);
+        modelBuilder.Entity<TrickEntity>(e =>
+        {
+            e.HasKey(t => t.Id);
+            e.HasOne(t => t.Profile).WithMany(p => p.Tricks).HasForeignKey(t => t.ProfileId);
+        });
+
         modelBuilder.Entity<AimPointEntity>(e =>
         {
             e.HasKey(a => a.Id);
             e.HasOne(a => a.Lineup).WithMany(l => l.AimPoints).HasForeignKey(a => a.LineupId);
         });
-         });
 
-         modelBuilder.Entity<ProfileEntity>(e =>
+        modelBuilder.Entity<ProfileEntity>(e =>
          {
              e.HasKey(p => p.Id);
          });
